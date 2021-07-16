@@ -1,0 +1,212 @@
+<?php global $movie_genres, $video_categories; ?>
+<style>
+    #advanced-search_filters *:not(.draggable-filter *) {
+        transition-duration: 0.5s;
+    }
+</style>
+<div class="row" id="advanced-search_filters">
+    <section class="filters-title-section">
+        <span class="filters-title">
+            {{LANG advanced_search-filter_title}}
+        </span>
+    </section>
+    <section class="filter-resultType">
+        <label class="filters-resultType-title">
+            {{LANG advanced_search-resultType-title}}
+        </label>
+        <div class="filters-resultType-data">
+            <div class="filters-resultType-gp filters-resultType-each selected" data-gp="0" data-id="0">
+                <span>{{LANG advanced_search-type_vid}}</span>
+            </div>
+            <div class="filters-resultType-gp" data-gp="1">
+                <div class="filters-resultType-each" data-id="1">
+                    <span>{{LANG advanced_search-type_movie}}</span>
+                </div>
+<!--                <div class="filters-resultType-each" data-id="2">-->
+<!--                    <span>{{LANG advanced_search-type_series}}</span>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </section>
+    <section id="filters">
+        <section>
+            <div class="filters-genre video">
+                <?php
+                $j = 0;
+                $max = count($video_categories);
+                $i = 3 - $max % 3;
+                $start = count($video_categories) - $i;
+                foreach($video_categories as $k => $v):
+                $i++;
+                ?>
+                <span class="each-genre<?= ($i > $start) ? (' g' . (($i - $start - 1))) : ('') ?>" data-id="<?= $v['id'] ?>" onclick="selectGenre(this)">
+                    <?= $v[$_SESSION['lang']] ?>
+                </span>
+                <?php endforeach; ?>
+            </div>
+            <div class="filters-genre cinema hidden">
+                <?php
+                $j = 0;
+                $max = count($movie_genres);
+                $i = 3 - $max % 3;
+                $start = count($movie_genres) - $i;
+                foreach($movie_genres as $k => $v):
+                $i++;
+                ?>
+                <span class="each-genre<?= ($i > $start) ? (' g' . (($i - $start - 1))) : ('') ?>" data-id="<?= $v['id'] ?>" onclick="selectGenre(this)">
+                    <?= $v[$_SESSION['lang']] ?>
+                </span>
+                <?php endforeach; ?>
+            </div>
+            <button type="button" id="reset-query" onclick="resetQuery('q')">
+                {{LANG advanced_search-q-reset}}
+            </button>
+            <section id="submit-filters" onclick="submitAdvSearch(0)">
+                <span>
+                    {{LANG advanced_search-submit_button}}
+                </span>
+            </section>
+        </section>
+        <section>
+            <section class="filters-query">
+                <label class="query-ui-text">
+                    {{LANG advanced_search-q-u-pre}}
+                </label>
+                <div class="query-text">
+                    {{LANG advanced_search-q-u-ph-vid}}
+                </div>
+                <p class="hidden" id="next-id">2</p>
+            </section>
+
+            <div class="filters-text video">
+                <section class="filters-title">
+                    <label for="text-keyword">
+                        {{LANG advanced_search-vid-keyword}}
+                    </label>
+                    <textarea class="borders" name="keyword" id="text-keyword"></textarea>
+                    <div>
+                    </div>
+                </section>
+                <section class="filters-title">
+                    <label for="text-username">
+                        {{LANG advanced_search-vid-user}}
+                    </label>
+                    <textarea class="borders" name="username" id="text-username"></textarea>
+                    <div>
+                    </div>
+                </section>
+            </div>
+            <div class="filters-text cinema hidden more-off">
+                <section class="filters-title">
+                    <label for="title-input">
+                        {{LANG advanced_search-title}}
+                    </label>
+                    <textarea class="borders" name="title" id="title-input"></textarea>
+                    <div>
+                    </div>
+                </section>
+                <section class="filters-text-other">
+                    <section class="filters-awards">
+                        <label for="awards-input">
+                            {{LANG advanced_search-awards}}
+                            <div class="help-info" onclick="showHelpInfo(this)">
+                                ?
+                            </div>
+                        </label>
+                        <textarea class="borders" name="awards" id="awards-input"></textarea>
+                        <div>
+                        </div>
+                    </section>
+                    <section class="filters-actors">
+                        <label for="actors-input">
+                            {{LANG advanced_search-actors}}
+                            <div class="help-info">
+                                ?
+                            </div>
+                        </label>
+                        <textarea class="borders" name="actors" id="actors-input"></textarea>
+                    </section>
+                </section>
+                <div class="filters-text-button" onclick="showMore(this)">
+                    <span>></span>
+                </div>
+            </div>
+            <div class="filters-duration">
+                <label>
+                    {{LANG advanced_search-duration}}
+                </label>
+                <div class="min-dur">
+                    <span>{{LANG advanced_search-dur_min}}</span>
+                    <div class="dur-each">
+                        <label for="minM-input">{{LANG advanced_search-duration-M}}</label>
+                        <input type="number" name="minM" min="-1" max="60" step="01" id="minM-input" value="00" minlength="2">
+                    </div>
+                    <div class="dur-each">
+                        <label for="minH-input">{{LANG advanced_search-duration-H}}</label>
+                        <input type="number" name="minH" min="-1" max="100" step="01" id="minH-input" value="00" minlength="2">
+                    </div>
+                </div>
+                <div class="max-dur">
+                    <span>{{LANG advanced_search-dur_max}}</span>
+                    <div class="dur-each">
+                        <label for="maxM-input">{{LANG advanced_search-duration-M}}</label>
+                        <input type="number" name="maxM" min="-1" max="60" step="01" id="maxM-input" value="00" minlength="2">
+                    </div>
+                    <div class="dur-each">
+                        <label for="maxH-input">{{LANG advanced_search-duration-H}}</label>
+                        <input type="number" name="maxH" min="-1" max="100" step="01" id="maxH-input" value="00" minlength="2">
+                    </div>
+                </div>
+            </div>
+            <div class="filters-releaseYear hidden">
+                <label>
+                    {{LANG advanced_search-release_year}}
+                </label>
+                <section class="draggable-limits">
+                    <span class="l1"></span>
+                    <span class="l2"></span>
+                    <span class="l3"></span>
+                    <span class="l4"></span>
+                    <span class="l5"></span>
+                </section>
+                <section class="draggable-filter">
+                    <div class="invalid-bar min"></div>
+                    <div class="draggable min"></div>
+                    <div class="valid-bar"></div>
+                    <div class="draggable max"></div>
+                    <div class="invalid-bar max"></div>
+                </section>
+                <section class="draggable-period">
+                    <div class="l1">
+                        <input type="number" name="minYear" onkeyup="putFigure(this)" onchange="putFigure(this)">
+                    </div>
+                    <span class="sep"></span>
+                    <div class="l2">
+                        <input type="number" name="maxYear" onkeyup="putFigure(this)" onchange="putFigure(this)">
+                    </div>
+                </section>
+            </div>
+        </section>
+    </section>
+    <div class="filters-button" onclick="showMore(this)">
+        <span>></span>
+    </div>
+<!--    TODO: add Exact Search or part-part or Segmentational-->
+</div>
+<div class="row" id="advanced-search_results">
+    <section class="results-title-section">
+        <span class="results-title">
+            {{LANG advanced_search-result_title}}
+        </span>
+    </section>
+    <section id="results-cinema">
+
+    </section>
+</div>
+<script>
+    var min = 0;
+    var max = 1000;
+    var default_q_ui_text_cinema = '{{LANG advanced_search-q-u-ph-cinema}}';
+    var default_q_ui_text_vid = '{{LANG advanced_search-q-u-ph-vid}}';
+    initializeReleaseYearFilter({{MIN_YEAR}}, {{MAX_YEAR}});
+</script>

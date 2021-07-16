@@ -1,0 +1,7 @@
+Changes:
+[Added] FTP support, now you can upload videos to diffrent servers.
+[Added] watermark on video player.
+[Added] 1080p, 2K, and 4K support to FFMPEG.
+[Added] GDPR support, cookie frame, checkboxes and privacy policy update.
+[Added] API for delete account, create playlist, and add to playlist.
+[Fixed] 10+ reported bugs

@@ -1,0 +1,13 @@
+Changes:
+1. Added watch later system.
+2. Added Full Ads system (User End), advertiser + Publisher (Monetization).
+3. Added blog system + comments + like / dislikes.
+4. Added Pro System (free | paid memeber).
+5. Added Amazon S3 support.
+6. Added dislike function to comment system.
+7. Added reply to comment system.
+8. Added backup system.
+9. Added RSS feed for videos
+10. Added max allowed upload size.
+11. Added custom fields.
+12. Fixed 5+ bugs.

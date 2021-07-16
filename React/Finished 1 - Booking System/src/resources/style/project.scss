@@ -1,0 +1,79 @@
+@font-face {
+  font-family: "Rounded Arial";
+  src: url("../font/unicode.arialr.ttf");
+}
+#project {
+  float: left;
+  position: relative;
+  width: 100vw;
+  height: 91vh;
+  padding: 4.5vh 0;
+  background-color: #888;
+  display: grid;
+  grid-template-rows: 100px auto;
+  * { font-family: "Rounded Arial"; }
+}
+html { overflow: hidden; min-width: 500px; }
+header {
+  width: 96%;
+  float: left;
+  position: relative;
+  height: calc(100% - 20px);
+  padding: 20px 2% 0 2%;
+  background-color: white;
+
+  .result-num {
+    float: left;
+    position: absolute;
+    bottom: 0;
+    width: 96%;
+    height: fit-content;
+    border-bottom: 1px solid lightgrey;
+  }
+
+  .hover-toggle {
+    position: absolute;
+    right: 2%;
+    width: 120px;
+    height: 30px;
+    > button {
+      position: relative;
+      float: left;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      font-weight: 700;
+      border-radius: 5px;
+    }
+    > button.toggle-off {
+      background-color: red;
+      border-color: red;
+      box-shadow: 0 0 5px red;
+    }
+    > button.toggle-on {
+      background-color: palegreen;
+      border-color: palegreen;
+      box-shadow: 0 0 5px palegreen;
+    }
+  }
+}
+main {
+  width: 96%;
+  padding: 0 2%;
+  background-color: white;
+  float: left;
+  position: relative;
+  display: block;
+  overflow-y: hidden;
+}
+.react-datepicker-popper {
+  z-index: 10;
+}
+
+@media (max-width: 700px) {
+  .hover-toggle { display: none; }
+  #a-body {
+    padding: 0;
+    width: 100%;
+  }
+}

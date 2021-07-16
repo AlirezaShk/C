@@ -1,0 +1,105 @@
+<div class="page-margin video-player-page">
+
+<?php if (!empty($pt->response_data)) {
+foreach ($pt->response_data['notifications'] as $key => $notify) {
+?>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card pt-2 pb-2 pl-4 pr-2">
+            <div class="header">
+                <div class="row">
+                    <div class="col-md-9 pr-4 text-right">
+                        <p><?php echo $notify['TIME']; ?></p>
+                        <a class="text-info d-inline-block" href="<?php echo $notify['USER_DATA']->url; ?>" > <?php echo $notify['USER_DATA']->username; ?>   </a>
+                        <p class="d-inline-block m-0"><?php echo $notify['TITLE'] ?></p>
+                    </div>
+                    <?php if (!empty($notify['VIDEO'])) { ?>
+                    <a class="col-md-3 text-left" href="<?php echo $notify['VIDEO']->url; ?>">
+                        <img src="<?php echo $notify['VIDEO']->thumbnail; ?>" width="60px" height="60px" class="">
+                    </a>
+                <?php } ?>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<?php }} else { ?>
+
+<p class="text-center white-text font-26">تاریخچه ای برای نمایش وجود ندارد</p>
+<?php } ?>
+
+
+
+    <!--<div class="container">-->
+
+
+        <!--<div class="col-md-12 pt_home_vid_content">-->
+            <!--<div class="row">-->
+                <!--<div class="content pt_shadow">-->
+                    <!--<div class="home-page-categories">-->
+                        <!--<div class="title">-->
+                            <!--<h4>-->
+                                <!--<div style="border-color: #e91e63;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#e91e63" d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z" /></svg></div>&nbsp;&nbsp;{{LANG shared_media}}-->
+                            <!--</h4>-->
+                        <!--</div>-->
+                        <!--<div class="videos pt_latest_vds">-->
+                            <!--<div class="row">-->
+                                <!--&lt;!&ndash;{{LATEST_LIST}}&ndash;&gt;-->
+                                <!--<div class="clear"></div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="clear"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--&lt;!&ndash;{{HOME_PAGE_VIDEOS}}&ndash;&gt;-->
+    <!--</div>-->
+</div>
+<script>
+    $(document).ready(function(){
+        $(".pl_feat_vid_slider").owlCarousel({
+            items:1,
+            nav: true,
+            navContainer: '.pl_feat_vid_slide_nav',
+            // dotsContainer: '.pl_feat_vid_slide_dots',
+            navText: ['<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>','<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" /></svg>'],
+        <?php if ($pt->language_type == 'rtl') { ?>
+            rtl: true,
+        <?php } ?>
+    });
+    });
+
+    $(document).ready(function() {
+        if( !$.trim( $('.pt_no_vid_found_trend').html() ).length ) {
+            $('.pt_no_vid_found_trend').html("<h5 class=\"empty_state\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-video-off\"><path d=\"M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10\"></path><line x1=\"1\" y1=\"1\" x2=\"23\" y2=\"23\"></line></svg> {{LANG no_videos_found_for_now}}</h5>");
+        };
+    });
+
+    $(document).ready(function() {
+        if( !$.trim( $('.pt_no_vid_found_top').html() ).length ) {
+            $('.pt_no_vid_found_top').html("<h5 class=\"empty_state\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-video-off\"><path d=\"M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10\"></path><line x1=\"1\" y1=\"1\" x2=\"23\" y2=\"23\"></line></svg> {{LANG no_videos_found_for_now}}</h5>");
+        };
+    });
+
+    $(function () {
+        $('#save-button').on('click', function(event) {
+            event.preventDefault();
+            var logged = $('#main-container').attr('data-logged');
+            if (!logged) {
+                window.location.href = "{{LINK register?to=<?php echo $pt->actual_link;?>}}";
+                return false;
+            }
+            var video_id = $('#video-id').val();
+            if ($(this).attr('saved')) {
+                $(this).html('<i class="fa fa-floppy-o fa-fw"></i> {{LANG save}}');
+                $(this).removeAttr('saved');
+            } else {
+                $(this).html('<i class="fa fa-check fa-fw"></i> {{LANG saved}}');
+                $(this).attr('saved', 'true');
+            }
+            $.post('{{LINK aj/save-video}}', {video_id: video_id});
+        });
+    });
+</script>

@@ -1,0 +1,145 @@
+<script src="{{CONFIG theme_url}}/js/flickity.pkgd.min.js"></script>
+<link rel="stylesheet" href="{{CONFIG theme_url}}/css/flickity.css">
+<style>
+    #container_content{
+        padding-top: 0;
+    }
+</style>
+
+
+<div class="main-carousel">
+    {{LATEST_LIST}}
+</div>
+
+<div class="page-margin video-player-page" >
+    <div class="container">
+
+        <div class="clear"></div>
+        <div class="row">
+            <div class="col-md-12 pt_home_vid_content">
+
+                <div class="content pt_shadow">
+                    <div class="home-page-categories">
+                        <div class="title">
+                            <h4>
+                                <div style="border-color: #2196F3;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                        <path fill="#2196F3"
+                                              d="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z"/>
+                                    </svg>
+                                </div>&nbsp;&nbsp;فیلم های سینمایی
+                            </h4>
+                        </div>
+                        <div class="videos grid-thumbnail"  data-grid-xxs="2" data-grid-xs="3" data-grid-sm="4" data-grid-md="6" data-grid-lg="8" data-grid-xl="8">
+                            <div class="row pt_no_vid_found_trend grid-wrapper" >
+                                {{TRENDING_LIST}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--{{SUBSC_HTML}}-->
+
+<!--        <div class="pt_home_vid_content" >-->
+<!--            <div class="content pt_shadow">-->
+<!--                    <div class="home-page-categories">-->
+<!--                        <div class="title">-->
+<!--                            <h4>-->
+<!--                                <div style="border-color: #e91e63;">-->
+<!--                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">-->
+<!--                                        <path fill="#e91e63"-->
+<!--                                              d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z"/>-->
+<!--                                    </svg>-->
+<!--                                </div>&nbsp;&nbsp;{{LANG latest_movies}}-->
+<!--                                <span class="view_more_link">-->
+<!--                <a href="{{LINK movies2/latest}}" data-load="?link1=movies2&page=latest">{{LANG explore_more}}-->
+<!--                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"-->
+<!--                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"-->
+<!--                       class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>-->
+<!--                </a>-->
+<!--              </span>-->
+<!--                            </h4>-->
+<!--                        </div>-->
+<!--                        <div class="videos pt_latest_vds">-->
+<!--                            <div class="row">-->
+<!--                                {{LATEST_LIST}}-->
+<!--                                <div class="clear"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="clear"></div>-->
+<!--                </div>-->
+<!--        </div>-->
+        <!--{{HOME_PAGE_VIDEOS}}-->
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.main-carousel').flickity({
+            // options
+            cellAlign: 'left',
+            contain: true,
+            adaptiveHeight: true,
+            imagesLoaded: true,
+            lazyLoad: 1,
+            autoplay: true,
+            pageDots: false
+        });
+        $(".pl_feat_vid_slider").owlCarousel({
+            items: 1,
+            nav: true,
+            navContainer: '.pl_feat_vid_slide_nav',
+            // dotsContainer: '.pl_feat_vid_slide_dots',
+            navText: ['<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" /></svg>'],
+            rtl: true,
+        // < ? php
+        // if ($pt - > language_type == 'rtl') {
+        //         ?
+        // >
+        //     rtl: true,
+        // <
+        //         ? php
+        // }
+        //     ?
+        // >
+    })
+        ;
+    });
+
+    $(document).ready(function () {
+        if (!$.trim($('.pt_no_vid_found_trend').html()).length) {
+            $('.pt_no_vid_found_trend').html("<h5 class=\"empty_state\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-video-off\"><path d=\"M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10\"></path><line x1=\"1\" y1=\"1\" x2=\"23\" y2=\"23\"></line></svg> {{LANG no_videos_found_for_now}}</h5>");
+        }
+        ;
+    });
+
+    $(document).ready(function () {
+        if (!$.trim($('.pt_no_vid_found_top').html()).length) {
+            $('.pt_no_vid_found_top').html("<h5 class=\"empty_state\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-video-off\"><path d=\"M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10\"></path><line x1=\"1\" y1=\"1\" x2=\"23\" y2=\"23\"></line></svg> {{LANG no_videos_found_for_now}}</h5>");
+        }
+        ;
+    });
+
+    $(function () {
+        $('#save-button').on('click', function (event) {
+            event.preventDefault();
+            var logged = $('#main-container').attr('data-logged');
+            if (!logged) {
+                window.location.href = "{{LINK login?to=<?php echo $pt->actual_link;?>}}";
+                return false;
+            }
+            var video_id = $('#video-id').val();
+            if ($(this).attr('saved')) {
+                $(this).html('<i class="fa fa-floppy-o fa-fw"></i> {{LANG save}}');
+                $(this).removeAttr('saved');
+            } else {
+                $(this).html('<i class="fa fa-check fa-fw"></i> {{LANG saved}}');
+                $(this).attr('saved', 'true');
+            }
+            $.post('{{LINK aj/save-video}}', {video_id: video_id});
+        });
+    });
+</script>

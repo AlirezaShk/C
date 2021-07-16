@@ -1,0 +1,59 @@
+<div class="content">
+	<div class="col-md-12">
+		<div class="upload-head subscriptions-header ">
+			<h4><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg> {{LANG subscriptions}}</h4>
+			<div class="grid-container">
+				<div class="following grid-item main">
+					{{channels}}
+				</div>
+			</div>
+			<div class="grid-container">
+				<div class="follower grid-item main">
+					{{channels2}}
+				</div>
+			</div>
+			<hr>
+		</div>
+		<div class="subscriptions-list">
+			<div class="author-list row pt_subscription">
+      		{{SUBSCRIPTION_LIST}}
+			</div>
+			<?php if ((is_array($pt->videos) || $pt->videos instanceof Countable) and count($pt->videos) > 5) { ?>
+            <div class="watch-video-show-more desc load-more" data-type="subscriptions">
+                {{LANG show_more}}
+            </div>
+			<?php } ?>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="clear"></div>
+</div>
+<script>
+	const slider = document.querySelector('.items');
+	let isDown = false;
+	let startX;
+	let scrollLeft;
+
+	slider.addEventListener('mousedown', (e) => {
+		isDown = true;
+		slider.classList.add('active');
+		startX = e.pageX - slider.offsetLeft;
+		scrollLeft = slider.scrollLeft;
+	});
+	slider.addEventListener('mouseleave', () => {
+		isDown = false;
+		slider.classList.remove('active');
+	});
+	slider.addEventListener('mouseup', () => {
+		isDown = false;
+		slider.classList.remove('active');
+	});
+	slider.addEventListener('mousemove', (e) => {
+		if(!isDown) return;
+		e.preventDefault();
+		const x = e.pageX - slider.offsetLeft;
+		const walk = (x - startX) * 3; //scroll-fast
+		slider.scrollLeft = scrollLeft - walk;
+		console.log(walk);
+	});
+</script>

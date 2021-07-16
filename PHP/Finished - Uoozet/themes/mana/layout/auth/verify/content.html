@@ -1,0 +1,78 @@
+l<div class="container login-page">
+    <div class="login-form">
+		<h4 style="display:{{HEADER}}">{{LANG lets_get_started}}</h4>
+    	<form action="{{LINK verify}}" method="POST">
+    	    <div class="errors form-group">{{ERRORS}}</div>
+    	     <div class="errors success form-group">{{SUCCESS}}</div>
+			<div class="form-group">
+				<input type="text" name="code" id="code" placeholder="{{LANG code}}" required value="" style="text-align: left;direction: ltr;border: solid #c3c394;color: #000;">
+			</div>
+			{{CUSTOM_FIELDS}}
+			<div class="terms" style="color: #fff;text-align: right">
+				<label for="accept_terms" style="font-size: 12px;color: #000; cursor: pointer;">
+					{{LANG verify_code}}
+				</label>
+				<div class="clear"></div>
+			</div>
+<!--			<div class="recaptcha">{{RECAPTCHA}}</div>-->
+			<div class="form-group">
+				<input type="submit" class="button" value ="{{LANG login}}"  style="background-color: #c3c394 !important;">
+			</div>
+			<div class="form-group">
+				<a href="?resend_code=1"><input type="button" class="button" value ="{{LANG resend_code}}"  style="background-color: #c3c394 !important;"></a>
+			</div>
+		</form>
+    </div>    
+</div>
+<ul class="bg-bubbles">
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+</ul>
+<script>
+$(function() {
+	$('.button').on('click', function () {
+		if ($('#code').val()) {
+			$(this).val("{{LANG please_wait}}");
+		}
+	});
+});
+</script>
+<style>
+.bg-bubbles {
+  background: -webkit-linear-gradient(top left, #{{COLOR1}} 0%, #{{COLOR2}} 100%);
+  background: linear-gradient(to bottom right, #{{COLOR1}} 0%, #{{COLOR2}} 100%);
+}
+.login-page {
+	margin-top: 150px;
+}
+.login-form input[type=submit] {
+	color: #{{COLOR1}} !important;
+}
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #fff;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #fff;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #fff;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #fff;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+   color:    #fff;
+}
+</style>

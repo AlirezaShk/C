@@ -1,0 +1,32 @@
+<div class="col-md-3 col-sm-6 col-xs-6 keep-padding" data-id="{{ID}}">
+	<div class="video-list">
+		<p style="font-size: 12px">
+			به اشتراک گذاری شده توسط
+			<a href="{{SHARER_URL}}" >{{SHARER_USERNAME}}</a>
+		</p>
+		<div class="video-list-image">
+			<a href="{{URL}}" data-load="?link1={{TYPE_MEDIA}}&id={{VIDEO_ID_}}">
+				<img src="{{THUMBNAIL}}" alt="{{TITLE}}">
+				<div class="play_hover_btn">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play-circle"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+				</div>
+			</a>
+			<div class="video-duration">{{DURATION}}</div>
+			<div class="video-duration" style="top: 5px;background-color: transparent">خوانده نشده</div>
+		</div>
+		<div class="pt_vid_fixed_height">
+			<div class="video-list-title">
+				<a href="{{URL}}" data-load="?link1={{TYPE_MEDIA}}&id={{VIDEO_ID_}}">
+					<h4 title="{{TITLE}}">{{TITLE}}</h4>
+				</a>
+			</div>
+			<div class="video-list-by">
+				<span><a href="{{LINK musics/singer/}}{{SINGERID}}" data-load="?link1=singer&id={{SINGERID}}">{{SINGER}}</a></span>
+				<span><a href="{{LINK musics/alboum/}}{{ALBOUMID}}" data-load="?link1=alboum&id={{ALBOUMID}}">{{ALBOUM}}</a></span>
+				<br/>
+				<span>{{VIEWS}} {{LANG views}}</span> <span class="bold">|</span> <span>{{TIME}}</span>
+			</div>
+		</div>
+	</div>
+</div>
+

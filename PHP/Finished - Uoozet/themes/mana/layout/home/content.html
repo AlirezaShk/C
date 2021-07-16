@@ -1,0 +1,91 @@
+<?php global $count_array; ?>
+<div id="user-homepage-holder" class="content">
+    <div class="liked-list col-md-12">
+        <div class="upload-head">
+            <h4><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg> {{LANG liked_videos}}</h4>
+            <hr>
+        </div>
+        <div class="author-list row pt_history">
+            {{LIKED_LIST}}
+        </div>
+        <?php if ($count_array['liked_vids'] > 5) { ?>
+        <div class="watch-video-show-more desc load-more" data-type="liked_videos">
+            {{LANG show_more}}
+        </div>
+        <?php } ?>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+
+    <div class="history-list col-md-12">
+        <div class="upload-head">
+            <h4><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> {{LANG history}}</h4>
+            <hr>
+        </div>
+        <div class="subscriptions-list">
+            <div class="author-list row pt_history">
+                {{HISTORY_LIST}}
+            </div>
+            <?php if ($count_array['history_vids'] > 5) { ?>
+            <div class="watch-video-show-more desc load-more" data-type="history">
+                {{LANG show_more}}
+            </div>
+            <?php } ?>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+
+
+    <div class="saved-list col-md-12">
+        <div class="upload-head">
+            <h4>{{LANG saved_videos}}</h4>
+            <hr>
+        </div>
+        <div class="subscriptions-list">
+            <div class="author-list">
+                {{SAVED_LIST}}
+            </div>
+            <?php if ($count_array['saved_vids'] > 5) { ?>
+            <div class="watch-video-show-more desc load-more" data-type="saved_videos">
+                {{LANG show_more}}
+            </div>
+            <?php } ?>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+
+    <div class="subscriptions-list col-md-12">
+        <div class="author-list row pt_subscription">
+            {{SUBSCRIPTION_LIST}}
+        </div>
+        <?php if ($count_array['subs_vids'] > 5) { ?>
+        <div class="watch-video-show-more desc load-more" data-type="subscriptions">
+            {{LANG show_more}}
+        </div>
+        <?php } ?>
+    </div>
+    <div class="clear"></div>
+
+    <div class="shared-list col-md-12">
+        <div class="row">
+            <div class="content pt_shadow">
+                <div class="home-page-categories">
+                    <div class="title">
+                        <h4>
+                            <div style="border-color: #e91e63;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#e91e63" d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z" /></svg></div>&nbsp;&nbsp;{{LANG shared_media}}
+                        </h4>
+                    </div>
+                    <div class="videos pt_latest_vds">
+                        <div class="row">
+                            {{SHARED_LIST}}
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>

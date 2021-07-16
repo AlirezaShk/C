@@ -1,0 +1,68 @@
+<div class="page-margin user-settings-page">
+	<ul class="settings-sidebar list-group">
+		<li class="list-group-item <?php echo ($pt->setting_page == 'general') ? 'active': '';?>">
+			<a href="{{LINK settings/general/<?php echo $pt->settings->username; ?>}}" data-load="?link1=settings&page=general"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> {{LANG general}}</a>
+		</li>
+		<li class="list-group-item <?php echo ($pt->setting_page == 'profile') ? 'active': '';?>">
+			<a href="{{LINK settings/profile/<?php echo $pt->settings->username; ?>}}" data-load="?link1=settings&page=profile&user=<?php echo $pt->settings->username; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> {{LANG profile}}</a>
+		</li>
+<!--		<?php if ($pt->config->usr_v_mon == 'on' && ($pt->settings->id == $pt->user->id)): ?>-->
+<!--			<li class="list-group-item <?php echo ($pt->setting_page == 'monetization') ? 'active': '';?>">-->
+<!--				<a href="{{LINK settings/monetization/<?php echo $pt->settings->username; ?>}}" data-load="?link1=settings&page=monetization&user=<?php echo $pt->settings->username; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> {{LANG monetization}}</a>-->
+<!--			</li>-->
+<!--		<?php endif; ?>-->
+		<li class="list-group-item <?php echo ($pt->setting_page == 'password') ? 'active': '';?>">
+			<a href="{{LINK settings/password/<?php echo $pt->settings->username; ?>}}" data-load="?link1=settings&page=password&user=<?php echo $pt->settings->username; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> {{LANG password}}</a>
+		</li>
+		<?php if (($pt->config->usr_v_mon == 'on' && $pt->config->sell_videos_system == 'on') || ($pt->config->usr_v_mon == 'off' && $pt->config->sell_videos_system == 'on') || ($pt->config->usr_v_mon == 'on' && $pt->config->sell_videos_system == 'off') ) { ?>
+		<li class="list-group-item <?php echo (in_array($pt->setting_page, array('withdrawals','balance'))) ? 'active': '';?>">
+			<a href="{{LINK settings/balance/<?php echo $pt->settings->username; ?>}}" data-load="?link1=settings&page=balance&user=<?php echo $pt->settings->username; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> {{LANG wallet}}</a>
+		</li>
+		<?php } ?>
+		<li class="list-group-item <?php echo ($pt->setting_page == 'avatar') ? 'active': '';?>">
+			<a href="{{LINK settings/avatar/<?php echo $pt->settings->username; ?>}}" data-load="?link1=settings&page=avatar&user=<?php echo $pt->settings->username; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> {{LANG avatar_and_cover}}</a>
+		</li>
+		<li class="list-group-item <?php echo ($pt->setting_page == 'inviteLink') ? 'active': '';?>">
+			<a href="{{LINK settings/inviteLink/<?php echo $pt->settings->username; ?>}}" data-load="?link1=settings&page=inviteLink&user=<?php echo $pt->settings->username; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>دعوت از دوستان</a>
+		</li>
+		<?php if ($pt->config->two_factor_setting == 'on'): ?>
+			<li class="list-group-item <?php echo ($pt->setting_page == 'two_factor') ? 'active': '';?>">
+				<a href="{{LINK settings/two_factor/<?php echo $pt->settings->username; ?>}}" data-load="?link1=settings&page=two_factor&user=<?php echo $pt->settings->username; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> {{LANG two_factor}}</a>
+			</li>
+		<?php endif ?>
+		<li class="list-group-item <?php echo ($pt->setting_page == 'channels') ? 'active': '';?>">
+			<a href="{{LINK settings/channels/<?php echo $pt->settings->username; ?>}}" data-load="?link1=settings&page=channels&user=<?php echo $pt->settings->username; ?>">
+				<svg class="feather" viewBox="0 0 111 111" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+					<!-- Generator: Sketch 55 (78076) - https://sketchapp.com -->
+					<title>television</title>
+					<desc>Created with Sketch.</desc>
+					<g id="Web" stroke="currentColor" stroke-width="0.5" fill="currentColor" fill-rule="evenodd">
+						<g id="Desktop-HD-Copy" stroke="currentColor" stroke-width="1" transform="translate(-261.000000, -643.000000)" fill="currentColor" fill-rule="nonzero">
+							<g id="television" transform="translate(261.000000, 643.000000)">
+								<path d="M103.599711,18.0846172 L68.9983516,18.0846172 C68.7298125,16.3620937 68.1438828,14.7445 67.3067578,13.2884922 L96.1916172,4.23736719 C97.3342812,3.87950781 97.9702187,2.66284375 97.6123594,1.52046875 C97.2542109,0.377804687 96.038125,-0.259 94.8954609,0.100015625 L64.3343281,9.67636719 C61.8718047,7.53441406 58.6594531,6.23305469 55.1470547,6.23305469 C51.6346562,6.23305469 48.4225937,7.53441406 45.9600703,9.67636719 L15.3986484,0.100015625 C14.2556953,-0.258132813 13.0396094,0.37809375 12.68175,1.52046875 C12.3236016,2.66313281 12.9595391,3.87950781 14.1022031,4.23736719 L42.9870625,13.2884922 C42.1499375,14.7445 41.5640078,16.3620937 41.2954687,18.0846172 L6.69584375,18.0846172 C3.09846094,18.0846172 0.171703125,21.011375 0.171703125,24.6084687 L0.171703125,97.9901641 C0.171703125,101.587547 3.09846094,104.514305 6.69584375,104.514305 L7.74138281,104.514305 L7.74138281,108.705711 C7.74138281,109.903008 8.71205469,110.87368 9.90935156,110.87368 C11.1066484,110.87368 12.0773203,109.903008 12.0773203,108.705711 L12.0773203,104.514305 L98.2179453,104.514305 L98.2179453,108.705711 C98.2179453,109.903008 99.1883281,110.87368 100.385914,110.87368 C101.5835,110.87368 102.553883,109.903008 102.553883,108.705711 L102.553883,104.514305 L103.599422,104.514305 C107.196516,104.514305 110.123273,101.587547 110.123273,97.9901641 L110.123273,24.6084687 C110.123852,21.011375 107.197094,18.0846172 103.599711,18.0846172 Z M55.1470547,10.5689922 C59.741125,10.5689922 63.5954844,13.7856797 64.5832109,18.0846172 L45.7111875,18.0846172 C46.698625,13.7859687 50.5526953,10.5689922 55.1470547,10.5689922 Z M105.787914,97.9901641 C105.787914,99.1967109 104.806258,100.178367 103.6,100.178367 L6.69584375,100.178367 C5.48929687,100.178367 4.50764062,99.1967109 4.50764062,97.9901641 L4.50764062,24.6084687 C4.50764062,23.4019219 5.48929687,22.4205547 6.69584375,22.4205547 L103.599711,22.4205547 C104.806258,22.4205547 105.787625,23.4022109 105.787625,24.6084687 L105.787625,97.9901641 L105.787914,97.9901641 Z" id="Shape"></path>
+								<path d="M100.007531,29.9720234 C99.8407422,28.9981719 99.0368594,28.2601953 98.0523125,28.1775234 C69.5822578,25.7826406 40.7124297,25.7826406 12.2429531,28.1775234 C11.2584063,28.2604844 10.4545234,28.9981719 10.2877344,29.9720234 C6.84442187,50.0881719 6.84442187,70.4876016 10.2877344,90.6034609 C10.4545234,91.5773125 11.2584062,92.315 12.2429531,92.3979609 C26.4775469,93.5955469 40.8124453,94.1941953 55.1476328,94.1941953 C69.4825313,94.1941953 83.8174297,93.5955469 98.0523125,92.3979609 C99.0365703,92.315 99.8407422,91.5773125 100.007531,90.6034609 C103.450844,70.4873125 103.450844,50.0881719 100.007531,29.9720234 Z M96.0092188,88.2158047 C68.8859063,90.4057422 41.4093594,90.4057422 14.286625,88.2158047 C11.2936719,69.675625 11.2936719,50.8998594 14.286625,32.3596797 C41.4096484,30.1697422 68.8859063,30.1697422 96.0092188,32.3596797 C99.0018828,50.8998594 99.0018828,69.675625 96.0092188,88.2158047 Z" id="Shape"></path>
+								<path d="M92.5271719,48.7616641 C91.3316094,48.8278594 90.4161484,49.8508516 90.4826328,51.0464141 C90.9037969,58.6513594 90.8014688,66.3603672 90.1779609,73.9592422 C90.0799688,75.1524922 90.9679688,76.1994766 92.1612188,76.2971797 C92.2216328,76.3020938 92.2814688,76.3044063 92.3407266,76.3044063 C93.4576641,76.3044063 94.4063672,75.4464688 94.4991563,74.3136328 C95.1388516,66.5176172 95.2440703,58.6085781 94.8116328,50.8062031 C94.7454375,49.6109297 93.7276484,48.6972031 92.5271719,48.7616641 Z" id="Path"></path>
+								<path d="M92.116125,46.1465156 C92.1857891,46.1465156 92.2563203,46.1430469 92.3271406,46.1363984 C93.5189453,46.0210625 94.3919141,44.9616484 94.2762891,43.7695547 C94.0615156,41.5469531 93.7990469,39.2942891 93.4963984,37.0734219 C93.3345234,35.8868203 92.2375313,35.0566328 91.0555547,35.2182188 C89.8692422,35.3800938 89.0381875,36.47275 89.2000625,37.6590625 C89.4951953,39.8238516 89.7510156,42.0201484 89.960875,44.1869609 C90.0692734,45.3079453 91.0124844,46.1465156 92.116125,46.1465156 Z" id="Path"></path>
+								<path d="M103.089805,94.1858125 C101.426539,93.0908437 99.2305312,94.7072812 99.812125,96.6171172 C100.076039,97.4834375 100.873562,98.1060781 101.778039,98.15175 C102.722984,98.1994453 103.605203,97.6051328 103.926062,96.7174219 C104.257617,95.7993594 103.906117,94.7231797 103.089805,94.1858125 Z" id="Path"></path>
+							</g>
+						</g>
+					</g>
+				</svg> {{LANG channels}}
+			</a>
+		</li>
+		<?php if ($pt->config->verification_badge == 'on'): ?>
+			<li class="list-group-item <?php echo ($pt->setting_page == 'verification') ? 'active': '';?>">
+				<a href="{{LINK settings/verification/<?php echo $pt->settings->username; ?>}}" data-load="?link1=settings&page=verification&user=<?php echo $pt->settings->username; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M23,12L20.56,9.22L20.9,5.54L17.29,4.72L15.4,1.54L12,3L8.6,1.54L6.71,4.72L3.1,5.53L3.44,9.21L1,12L3.44,14.78L3.1,18.47L6.71,19.29L8.6,22.47L12,21L15.4,22.46L17.29,19.28L20.9,18.46L20.56,14.78L23,12M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z"></path></svg> {{LANG verification}}</a>
+			</li>
+		<?php endif ?>
+		<?php if ($pt->config->delete_account == 'on') { ?>
+		<li class="list-group-item <?php echo ($pt->setting_page == 'delete') ? 'active': '';?>">
+			<a href="{{LINK settings/delete/<?php echo $pt->settings->username; ?>}}" data-load="?link1=settings&page=delete&user=<?php echo $pt->settings->username; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> {{LANG delete_account}}</a>
+		</li>
+			<?php } ?>
+	</ul>
+	<div class="settings-content">
+	{{SETTINGSPAGE}}
+	</div>
+</div>
+<br>

@@ -1,0 +1,16 @@
+{
+    "db_hostname": "localhost",
+    "db_username": "uoozit_db",
+    "db_password": "TyosnjeDU",
+    "db_dbname": "uoozit_db",
+    "site_url": "http:\/\/uoozet.com",
+    "server_ip": "144.76.75.171",
+    "server_port": 4545,
+    "amazon": false,
+    "amazon_bucket": "",
+    "nodejs_message_update_interval": 500,
+    "ajax_message_update_interval": 3000,
+    "ssl": false,
+    "ssl_privatekey_full_path": "",
+    "ssl_cert_full_path": ""
+}

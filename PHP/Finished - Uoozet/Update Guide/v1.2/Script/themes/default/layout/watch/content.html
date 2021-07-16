@@ -1,0 +1,458 @@
+<div class="top-video video-player-page">
+    <div class="row">
+        <div id="background" class="hidden"></div>
+        <div class="col-md-8 player-video">
+          <div class="video-player {{USR_AD_TRANS}}">
+                  <?php if (!empty($pt->get_video->vimeo)) {?>
+                      <iframe src="https://player.vimeo.com/video/{{VIDEO_ID}}?api=1;title=0&amp;byline=0&amp;portrait=0&amp;autoplay=1" width="100%" height="500" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                   <?php } else if (!empty($pt->get_video->daily)) { ?>
+                      <iframe frameborder="0" width="100%" height="500" src="//www.dailymotion.com/embed/video/{{VIDEO_ID}}?PARAMS" allowfullscreen></iframe>
+                   <?php } else { ?>
+                      <video id="my-video" controls <?php if (empty($pt->ad_image)) { ?> autoplay <?php } ?> style="width:100%; height:100%;" poster="{{THUMBNAIL}}" >
+                         <source src="{{VIDEO_LOCATION}}" type="{{VIDEO_TYPE}}"> Your browser does not support HTML5 video.
+                         <!-- //src="http://www.youtube.com/watch?v=nOEw9iiopwI" type="video/youtube" -->
+                      </video>
+                       <?php if (!empty($pt->ad_image)) { ?>
+                       <a href="{{AD_P_LINK}}" class="ad-link" target="_blank">
+                          <div class="ad-image">
+                             <div class="ads-test"><i class="fa fa-bullhorn"></i> Advertisement will close in <span class="timer">(<span>{{AD_SKIP_NUM}}</span>)</span></div>
+                             <img src="{{AD_IMAGE}}" alt="Ads">
+                          </div>
+                        </a>
+                       <?php } ?>
+                      <?php if ($pt->config->resize_video == 'on') { ?>
+                       <div class="icons hidden">
+                         <span class="expend-player"><i class="fa fa-expand fa-fw"></i></span>
+                       </div>
+                       <?php } ?>
+                   <?php } ?>
+                   
+                   {{USER_ADS_DESC_OVERLAY}}
+                   
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="col-md-4 no-padding-left pull-right desktop">
+            <div class="content">
+                <div class="ads-placment">{{WATCH_SIDEBAR_AD}}</div>
+                <?php if ($pt->config->autoplay_system == 'on') { ?>
+                <div class="next-video">
+                  <div class="next-text pull-left">
+                    <h4>{{LANG up_next}}</h4>
+                  </div>
+                  <div class="checkbox checkbox-info pull-right">
+                    <input id="autoplay" type="checkbox" {{COOKIE}}>
+                    <label for="autoplay">
+                        {{LANG autoplay}}
+                    </label>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <div class="videos-list" id="next-video">{{VIDEO_NEXT_SIDEBAR}}</div><br>
+                <?php } ?>
+                <div class="related-header">
+                    <h4></h4>
+                </div>
+                <div class="videos-list">{{VIDEO_SIDEBAR}}</div>
+            </div>
+        </div>
+        <div class="col-md-8 ">
+            <div class="content">
+                <div class="video-title">
+                    <input type="hidden" value="{{ID}}" id="video-id">
+                    <div class="video-big-title">
+                        <a href="{{URL}}" itemprop="title"><h1>{{TITLE}}</h1></a> <?php if ($pt->get_video->is_owner == true) { ?><a title="Edit" style="color:#fff;" class="btn btn-main" href="{{LINK edit-video/{{ID}}}}"><i title="{{LANG edit_video}}" class="fa fa-pencil fa-fw"></i></a> <?php } ?>
+                    </div>
+                    <div class="publisher-element pull-left">
+                        <div class="publisher-avatar pull-left hide-in-mobile-720">
+                            <a href="{{USER url}}"><img src="{{USER avatar}}" alt="{{USER name}}"></a>
+                        </div>
+                        <div class="publisher-name">
+                            <a href="{{USER url}}">{{USER name_v}}</a><span class="views-mobile show-in-mobile"> - {{VIEWS}} {{LANG views}}</span>
+                        </div>
+                        <div class="publisher-subscribe-button hide-in-mobile-720">
+                            {{SUBSCIBE_BUTTON}}
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="video-info-element pull-right">
+                        <div class="video-views hide-in-mobile-720">
+                            {{VIEWS}} {{LANG views}}
+                        </div>
+                        <div class="views-bar hide-in-mobile-720" style="width: {{DISLIKES_P}}%"></div>
+                        <div class="views-bar blue hide-in-mobile-720" style="width: {{LIKES_P}}%"></div>
+                        <div class="clear"></div>
+                        <div class="video-likes">
+                            <div class="like-btn pull-left {{LIKE_ACTIVE_CLASS}}" id="likes-bar" onclick="Wo_LikeSystem('{{ID}}', 'like', this, 'is_ajax')" data-likes="{{RAEL_LIKES}}" {{ISLIKED}}>
+                                <i class="fa fa-thumbs-up"></i> <span class="likes" id="likes">{{LIKES}}</span>
+                            </div>
+                            <div class="like-btn pull-right text-right {{DIS_ACTIVE_CLASS}}" id="dislikes-bar" onclick="Wo_LikeSystem('{{ID}}', 'dislike', this, 'is_ajax')" data-likes="{{RAEL_DISLIKES}}" {{ISDISLIKED}}>
+                                <i class="fa fa-thumbs-down"></i> <span class="likes" id="dislikes">{{DISLIKES}}</span>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="video-options">
+                        <?php if (IS_LOGGED): ?>
+                        <button class="btn-share" onclick="PT_AddToList('{{ID}}');">
+                            <i class="fa fa-plus fa-fw"></i> {{LANG add_to}}
+                        </button>
+                        <?php endif; ?>
+                        <button class="btn-share" id="share-video">
+                            <i class="fa fa-share fa-fw"></i> {{LANG share}}
+                        </button>
+                        <?php if ($pt->config->embed_system == 'on') {?>
+                        <button class="btn-share" id="embed-video">
+                            <i class="fa fa-code fa-fw"></i> {{LANG embed}}
+                        </button>
+                        <?php } ?>
+                        <!-- <button class="btn-share">
+                            <i class="fa fa-flag fa-fw"></i> {{LANG report}}
+                        </button> -->
+                        <div class="embed-placement hidden">
+                           <textarea name="embed" id="embed" cols="30" rows="3" class="form-control"><iframe src="{{LINK embed/{{VIDEO_MAIN_ID}}}}" frameborder="0" width="700" height="400" allowfullscreen></iframe></textarea>
+                        </div>
+                        <div class="share-video hidden">
+                           <a href="https://www.facebook.com/sharer/sharer.php?u={{ENCODED_URL}}" class="fa fa-facebook"></a>
+                           <a href="https://twitter.com/home?status={{ENCODED_URL}}" class="fa fa-twitter"></a>
+                           <a href="https://plus.google.com/share?url={{ENCODED_URL}}" class="fa fa-google"></a>
+                           <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ENCODED_URL}}&title={{TITLE}}" class="fa fa-linkedin"></a>
+                           <a href="ttps://pinterest.com/pin/create/button/?url={{ENCODED_URL}}&media={{THUMBNAIL}}" class="fa fa-pinterest"></a>
+                           <a href="http://www.tumblr.com/share/link?url={{ENCODED_URL}}" class="fa fa-tumblr"></a>
+                           <a href="http://www.reddit.com/submit?url={{ENCODED_URL}}" class="fa fa-reddit"></a>
+                           <a href="#" onclick="copyToClipboard(this)" class="fa fa-link" link="{{URL}}"></a>
+                        </div>
+                    </div>
+                    
+                    <div class="video-published">
+                        {{LANG published_on}} {{TIME}} / {{LANG in}} <a href="{{LINK videos/category/{{CATEGORY_ID}}}}">{{CATEGORY}}</a>
+                    </div>
+                    <div class="watch-video-description">
+                        <p dir="auto" itemprop="description">{{DESC}}</p>
+                    </div>
+                    <div class="watch-video-show-more desc">
+                        {{LANG show_more}}
+                    </div>
+                </div>
+            </div>
+            <div class="ads-placment">{{COMMENT_AD}}</div>
+            <?php if ($pt->config->comment_system == 'default' || $pt->config->comment_system == 'both') { ?>
+            <div class="comments-content content">
+                <div class="comments-header">
+                    {{LANG comments}} - {{COUNT_COMMENTS}}
+                </div>
+                <div class="comment-box">
+                    <textarea name="comment" id="comment-textarea" cols="30" rows="2" class="form-control" placeholder="{{LANG write_your_comment}}"></textarea>
+                </div>
+                <div class="comment-button">
+                    <div class="pull-right">
+                        <button class="btn btn-main btn-sm" onclick="PT_PostComment(this)">{{LANG publish}}</button>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <hr>
+                <div class="user-comments">{{COMMENTS}}</div>
+                <?php if ($pt->count_comments > 0): ?>
+                    <div class="watch-video-show-more comments-load">
+                        {{LANG show_more}}
+                    </div>
+                    <?php endif; ?>
+            </div>
+            <?php } ?>
+            <?php if ($pt->config->comment_system == 'fb' || $pt->config->comment_system == 'both') { ?>
+            <div class="content">
+                <div class="comments-header">
+                    {{LANG fb_comments}}
+                </div>
+                <div class="comment-box">
+                    <div class="fb-comments" data-href="{{URL}}" data-numposts="5" width="100%"></div>
+                </div>
+            </div>
+            <?php } ?>
+        </div>
+        <div class="col-md-4 no-padding-left pull-right mobile">
+            <div class="content">
+                <div class="next-video">
+                  <div class="next-text pull-left">
+                    <h4>{{LANG up_next}}</h4> 
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <div class="videos-list" id="next-video">{{VIDEO_NEXT_SIDEBAR}}</div><br>
+                <div class="related-header">
+                </div>
+                <div class="videos-list">{{VIDEO_SIDEBAR}}</div>
+            </div>
+        </div>
+       <div class="clear"></div>
+    </div>
+</div>
+
+<script>
+
+$('.ad-link').on('click', function(event) {
+  $('.ad-link').remove();
+  $('#my-video')[0].play();
+});
+
+<?php if (!empty($pt->ad_image)) { ?>
+var counter = {{AD_SKIP_NUM}};
+var interval = setInterval(function() {
+    counter--;
+    $('.timer span').text(counter);
+    if (counter == 0) {
+        $('.ad-link').remove();
+        $('#my-video')[0].play();
+        clearInterval(interval);
+    }
+}, 1000);
+<?php } ?>
+$('#autoplay').on('change', function(event) {
+  event.preventDefault();
+  checked = 1;
+  if($(this).is(":checked")) {
+    checked = 2;
+  }
+  $.post('{{LINK ajax/set-cookies}}', {name: 'autoplay', value: checked});
+});
+$('.ads-test').on('click', function(event) {
+  $(this).remove();
+});
+function PT_PostComment(button) {
+   var text = $('#comment-textarea').val();
+   if (!text) {
+      $('#comment-textarea').css('border', '1px solid red');
+      return false;
+   }
+   var video_id = $('#video-id').val();
+   if (!video_id) {
+      return false;
+   }
+   $(button).text("{{LANG please_wait}}");
+   $(button).attr('disabled', true);
+   $.post('{{LINK ajax/add-comment}}', {video_id: video_id, text: text}, function(data, textStatus, xhr) {
+      if (data.status == 200) {
+         if ($('.no-comments-found').length > 0) {
+            $('.no-comments-found').remove();
+         }
+         $('#comment-textarea').val('');
+         $('.user-comments').prepend(data.comment);
+      }
+      $(button).text("{{LANG publish}}");
+      $(button).attr('disabled', false);
+   });
+}
+
+function PT_DeleteComment(id) {
+  if (!id) { return false; }
+  if (!confirm('{{LANG delete_confirmation}}')) { return false; }
+  $('#comment-' + id).slideUp('fast');
+  $.post('{{LINK ajax/delete-comment}}', {id: id});
+}
+
+$(function () {
+    $('.rad-transaction').click(function(event) {
+      $(this).off("click").removeClass('rad-transaction');
+      $.get('{{LINK ajax/ads/rad-transaction}}', function(data){ /* pass */ });
+    });
+
+    if ($('[data-litsitem-id]').length > 4) {
+      var listItemtopPos = $("div[data-litsitem-id=<?php echo $pt->get_id; ?>]").offset();
+      $('.play-list-cont').scrollTop((listItemtopPos.top - 170));
+    }
+   
+
+   $('#share-video').on('click', function(event) {
+      event.preventDefault();
+      $('.share-video').toggleClass('hidden');
+   });
+   $('#embed-video').on('click', function(event) {
+      event.preventDefault();
+      $('.embed-placement').toggleClass('hidden');
+   });
+   $('#comment-textarea').on('click', function(event) {
+      event.preventDefault();
+      var logged = $('#main-container').attr('data-logged');
+      if (!logged) {
+         window.location.href = "{{LINK login?to=<?php echo $pt->actual_link;?>}}";
+         return false;
+      }
+      $(this).css('border', '1px solid #888');
+   });
+   $('#save-button').on('click', function(event) {
+      event.preventDefault();
+      var logged = $('#main-container').attr('data-logged');
+      if (!logged) {
+         window.location.href = "{{LINK login?to=<?php echo $pt->actual_link;?>}}";
+         return false;
+      }
+      var video_id = $('#video-id').val();
+      if ($(this).attr('saved')) {
+         $(this).html('<i class="fa fa-floppy-o fa-fw"></i> {{LANG save}}');
+         $(this).removeAttr('saved');
+      } else {
+         $(this).html('<i class="fa fa-check fa-fw"></i> {{LANG saved}}');
+         $(this).attr('saved', 'true');
+      }
+      $.post('{{LINK ajax/save-video}}', {video_id: video_id});
+   });
+   $('.desc').on('click', function(event) {
+      event.preventDefault();
+      $('.watch-video-description').css({
+         'max-height': '4000px',
+         'height': 'auto',
+         'overflow': 'auto'
+      });
+      $(this).remove();
+   });
+   $('.comments-load').on('click', function(event) {
+      event.preventDefault();
+      var last_id = $('.main-comment:last').attr('data-id');
+      var video_id = $('#video-id').val();
+      $.post('{{LINK ajax/load-more-comments}}', {last_id: last_id, video_id:video_id}, function(data, textStatus, xhr) {
+         if (data.status == 200) {
+            $('.user-comments').append(data.comments);
+         } else {
+            $('.comments-load').text(data.message);
+         }
+      });      
+   });
+   <?php if (!empty($pt->get_video->youtube)) { ?>
+   setTimeout(function () {
+     $('iframe').css({ width: '100%', height: '100%'});
+   }, 2000);
+   <?php } ?>
+    
+    $('video, audio').mediaelementplayer({
+      pluginPath: 'https://cdnjs.com/libraries/mediaelement-plugins/',
+      shimScriptAccess: 'always',
+      autoplay: true,
+      features: ['playpause', 'fullscreen', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks', 'markers', 'volume', 'chromecast', 'contextmenu', 'flash' {{ADS}} {{VAT}}],
+      vastAdTagUrl: '{{VAST_URL}}',
+      vastAdsType: '{{VAST_TYPE}}',
+      jumpForwardInterval: 20,
+      adsPrerollMediaUrl: [{{AD_MEDIA}}],
+      adsPrerollAdUrl: [{{AD_LINK}}],
+      adsPrerollAdEnableSkip: {{AD_SKIP}},
+      adsPrerollAdSkipSeconds: {{AD_SKIP_NUM}},
+      success: function (media) {
+          media.addEventListener('ended', function (e) {
+          
+            if ($('#autoplay').is(":checked")) {
+               var url = $('#next-video').find('.video-title').find('a').attr('href');
+               if (url) {
+                  window.location.href = url;
+               }
+            }
+            else{
+              /* pass */
+            }
+          }, false);
+
+          media.addEventListener('playing', function (e) {
+            if (pt_elexists('.ads-overlay-info')) {
+              $('.ads-overlay-info').remove();
+            }
+
+            $('.ads-test').remove();
+             
+            if ($('body').attr('resized') == 'true') {
+                PT_Resize(true);
+            }
+          }); 
+      },
+    });
+
+    $('.expend-player').on('click', function(event) {
+     event.preventDefault();
+     var resize = 0;
+     if ($('.player-video').hasClass('col-md-12')) {
+       resize = 0;
+     } else {
+       resize = 1;
+     }
+     $.post('{{LINK ajax/set-cookies}}', {name: 'resize', value:resize});
+     PT_Resize();
+    });
+   <?php 
+   if (!empty($_SESSION['resize']) && $pt->config->resize_video == 'on' && (empty($pt->get_video->daily) && empty($pt->get_video->vimeo))) {
+    ?>
+      PT_Resize(true);
+      if ($('.player-video').hasClass('col-md-12')) {
+        $('#background').css('height', '87%');
+      }
+    <?php
+   } 
+   ?>
+   $(window).resize(function(event) {
+     if ($('body').attr('resized') == 'true') {
+        PT_Resize(true);
+     }
+   });
+});
+if (document.addEventListener)
+{
+    document.addEventListener('webkitfullscreenchange', exitHandler, false);
+    document.addEventListener('mozfullscreenchange', exitHandler, false);
+    document.addEventListener('fullscreenchange', exitHandler, false);
+    document.addEventListener('MSFullscreenChange', exitHandler, false);
+}
+
+function exitHandler()
+{
+    if (document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== null)
+    {
+        setTimeout(function () {
+         PT_Resize(false);
+        }, 100);
+    }
+}
+function PT_Resize(type) {
+  if ($('.player-video').hasClass('col-md-12') && type != true) {
+      $('.player-video').addClass('col-md-8');
+      $('.player-video').removeClass('col-md-12');
+      $('.player-video').css('margin-bottom', '0');
+      $('.player-video').css('margin-top', '0');
+      $('#mep_0, video, iframe').css('width', '100%');
+      $('#mep_0').css('height', ($('#mep_0').width() / 1.77176216) + 'px');
+      $('video, iframe').css('height', '100%');
+      $('.second-header-layout').removeClass('hidden');
+      $('.header-layout').css('background', '#fff');
+      $('.header-layout').css('border-bottom', '1px solid #f1f1f1');
+      $('#search-bar').css('border', '1px solid #f5f5f5');
+      $('#search-bar').css('color', '#444');
+      $('.hide-resize').removeClass('hidden');
+      $('.logo-img').find('img').attr('src', '{{CONFIG theme_url}}/img/logo.png');
+      $('ul.navbar-nav a').css('color', '#444');
+      $('#background').addClass('hidden');
+      $('body').attr('resized', 'false');
+   } else {
+      var pixels = ($(window).height() / 100) * 88;
+      $('.player-video').removeClass('col-md-8');
+      $('.player-video').addClass('col-md-12');
+      $('.second-header-layout').addClass('hidden');
+      $('.player-video').css('margin-bottom', '10px'); 
+      $('.player-video').css('margin-top', '48px');
+      $('#mep_0, video, iframe').css('width', '100%');
+      $('#mep_0').css('height', pixels + 'px');
+      $('video, iframe').css('height', '100%');
+      $('.header-layout').css('background', 'rgb(32,32,32)');
+      $('.header-layout').css('border-bottom', 'none');
+      $('#search-bar').css('border', '1px solid #555');
+      $('#search-bar').css('color', '#fff');
+      $('.hide-resize').addClass('hidden');
+      $('.logo-img').find('img').attr('src', '{{CONFIG theme_url}}/img/logo-light.png');
+      $('ul.navbar-nav a').css('color', '#fff');
+      $('#background').removeClass('hidden');
+      $('#background').css('height', '88%');
+      $('body').attr('resized', 'true');
+   }
+}
+</script>
+
+<style>
+#mep_0 {
+  max-height: 100% !important;
+}
+</style>

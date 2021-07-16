@@ -1,0 +1,434 @@
+<script>
+function PT_Subscribe(user_id, type) {
+  if (!user_id || !type) { return false; }
+  if (!$('#main-container').attr('data-logged') && $('#main-url').val()) {
+      window.location.href = PT_Ajax_Requests_File() + 'login?to=' + $('#main-url').val();
+      return false;
+  }
+  var subscribe_button = $('.subscribe-id-' + user_id);
+  if (type == 'subscribe') {
+    subscribe_button.removeClass('btn-subscribe').addClass('btn-subscribed');
+    subscribe_button.html('<i class="fa fa-check fa-fw"></i> {{LANG subscribed}}');
+    subscribe_button.attr('onclick', 'PT_Subscribe(' + user_id + ', "subscribed")');
+  } else {
+    subscribe_button.removeClass('btn-subscribed').addClass('btn-subscribe');
+    subscribe_button.html('<i class="fa fa-plus-square fa-fw"></i> {{LANG subscribe}}');
+    subscribe_button.attr('onclick', 'PT_Subscribe(' + user_id + ', "subscribe")');
+  }
+  $.post('{{LINK ajax/subscribe}}', {user_id: user_id});
+}
+$(function () {
+  $('.load-more').on('click' , function(event) {
+    event.preventDefault();
+    var $type = $(this).attr('data-type');
+    var keyword = '';
+    if ($(this).attr('data-keyword')) {
+      keyword = $(this).attr('data-keyword');
+    }
+    var last_id = $('.video-wrapper:last').attr('data-id');
+    if ($(this).attr('data-category')) {
+      var $category_id = $(this).attr('data-category');
+      $type = 'category?c_id=' + $category_id;
+    }
+    views = 0;
+    if ($('.video-wrapper:last').attr('data-views')) {
+      var views = $('.video-wrapper:last').attr('data-views');
+      $type = $type + '?views=' + views;
+    }
+    user_id = 0;
+    if ($('#profile-id').val()) {
+      var user_id = $('#profile-id').val();
+    }
+    
+    data1 = {};
+    if (views) {
+      var asdf = $('div[data-views=' + views + ']').each(function(index, el) {
+        data1[index] = $(this).attr('data-id')
+      });
+    }
+
+    $('.load-more').text('{{LANG please_wait}}');
+    $.post('{{LINK ajax/load-more/' + $type + '}}', {last_id: last_id, ids: data1, keyword:keyword, user_id: user_id}, function(data, textStatus, xhr) {
+       if (data.status == 200) {
+          if ($type == 'subscriptions' || $type == 'history' || $type == 'saved_videos' || $type == 'liked_videos' || $type == 'my_videos' || $type == 'search') {
+             $('.author-list').append(data.videos);
+          } else {
+            $('.videos-latest-list').append(data.videos);
+          }
+          $('.load-more').text('{{LANG show_more}}');
+       } else {
+          $('.load-more').text('{{LANG no_more_videos_to_show}}');
+       }
+       scrolled = 0;
+    });
+  });
+});
+
+function PT_DeleteVideo(id, type) {
+  if (!id) {
+    return false;
+  }
+  if (!confirm("{{LANG delete_video_confirmation}}")) {
+    return false;
+  }
+  if (type == 'edit-page') {
+    $('.btn-delete').attr('disabled', true);
+    $('.btn-delete').val('{{LANG please_wait}}');
+  } else if (type == 'manage-page') {
+    $('#video-' + id).slideUp('200', function () {
+      $(this).remove();
+    });
+  }
+  $.post('{{LINK ajax/delete-video}}', {id: id}, function(data, textStatus, xhr) {
+    if (data.status == 200) {
+      if (type == 'edit-page') {
+        window.location.href = '{{LINK manage-videos}}';
+      } 
+    }
+  });
+}
+
+function PT_DeleteHistory(id) {
+  if (!id) {
+    return false;
+  }
+  $('#video-' + id).slideUp('200', function () {
+    $(this).remove();
+  });
+  $.post('{{LINK ajax/delete-history}}', {id: id});
+}
+
+function PT_DeleteSaved(id) {
+  if (!id) {
+    return false;
+  }
+  $('#video-' + id).slideUp('200', function () {
+    $(this).remove();
+  });
+  $.post('{{LINK ajax/delete-saved}}', {id: id});
+}
+
+function PT_AddToList(video_id){
+  if (!video_id) {
+    return false;
+  }
+
+  var name = '';
+  var desc = '';
+  var id   = video_id;
+
+  $.ajax({
+    url: '{{LINK ajax/lists}}',
+    type: 'GET',
+    dataType: 'json',
+    data: {type: 'list',a:'add',id:id},
+  })
+  .done(function(data) {
+    if (data.status == 200) {
+      swal({
+        title: "",
+        type: "",
+        html:data.html,
+        showCancelButton: true,
+        cancelButtonText: "{{LANG close}}",
+        customClass: 'sweetalert-lg',
+        confirmButtonText:'<i class="fa fa-plus" aria-hidden="true"></i> {{LANG create_new}}'
+      }).then(function(){
+          PT_NewList();
+        },function(){
+        //Error
+      });
+    }
+    else{
+      swal(
+        'Error!',
+        'Something went wrong.Please try again later!',
+        'error'
+      );
+    }
+  })
+  .fail(function() {
+    console.log("error");
+  })
+  .always(function() {
+    console.log("complete");
+  });
+}
+
+function PT_PLVToggle(id,self){
+  if (!id || !self) {
+    return false;
+  }
+  var self = $(self);
+  var list = self.attr('id');
+  $.ajax({
+    url: '{{LINK ajax/lists}}',
+    type: 'GET',
+    dataType: 'json',
+    data: {type: 'list',a:'tg',id:id,list:list},
+  })
+  .done(function(data) {
+    if (data.status == 200 && data.code == 1) {
+      self.find('button').html('<i class="fa fa-check-square-o"></i>');
+      notif({
+        msg: "{{LANG added_to}} " + data.name,
+        type: "default",
+        fade:0,
+        timeout:1500
+      });
+    }
+
+    else if(data.status == 200 && data.code == 0){
+      self.find('button').html('<i class="fa fa-square-o"></i>');
+      notif({
+        msg: "{{LANG removed_from}} " + data.name,
+        type: "default",
+        fade:0,
+        timeout:1500
+      });
+    }
+
+    else{
+      swal(
+        'Error!',
+        'Something went wrong.Please try again later!',
+        'error'
+      );
+    }
+  })
+  .fail(function() {
+    console.log("error");
+  })  
+}
+
+function PT_NewList(){
+  swal({
+    title: '',
+    type: "",
+    html:'<form class="form create-new-list"><div class="create-new-list-head"><p><i class="fa fa-plus"></i> {{LANG create_new_pl}}</p></div><div class="sa-create-list-alert"></div><div class="form-group"><input type="text" class="form-control" placeholder="{{LANG pl_name}} 0 / 30"></div><div class="form-group"><select class="form-control"><option value="1" selected="selected">{{LANG privacy}}</option><option value="1">{{LANG public}}</option><option value="0">{{LANG private}}</option></select></div><div class="form-group"><textarea name="" id="" rows="3" class="form-control optional-field" placeholder="{{LANG description}}.."></textarea></div></form>',
+    showCancelButton: true,
+    allowOutsideClick:false,
+    confirmButtonText:'<i class="fa fa-plus-circle"></i> {{LANG create}}',
+    cancelButtonText:'{{LANG cancel}}',
+    preConfirm: function (email) {
+    return new Promise(function (resolve, reject) {
+        name     = $(".create-new-list").find('input').val();
+        desc     = $(".create-new-list").find('textarea').val();
+        privacy  = $(".create-new-list").find('select').val();
+        setTimeout(function() {
+          if (name == '') {
+            reject('{{LANG pl_name_required}}');
+          }
+          else if(privacy < 0 || privacy > 1){
+            reject('{{LANG please_check_details}}');
+          }
+          else {
+            resolve();
+          }
+        }, 100)
+      })
+    }
+  }).then(function(){
+    if (!name){ return;}
+    $.ajax({
+      url: '{{LINK ajax/lists?type=list&a=new}}',
+      type: 'POST',
+      dataType: 'json',
+      data: {name:name,desc:desc,pr:privacy},
+    })
+    .done(function(data) {
+      if (data.status == 200) {
+        swal({
+          title:name,
+          text:"{{LANG pl_сreated}}",
+          type:'success'
+        });
+
+        PT_Delay(function(){
+          swal.close();
+        },2000);
+      }
+      else if(data.status == 200){
+        swal(
+          'Error!',
+          'Something went wrong.Please try again later!',
+          'error'
+        );
+      }
+    })
+    .fail(function() {
+      swal.close();
+      console.log("error");
+    })
+  },
+  function(){
+    //Error
+  })
+}
+
+function PT_EditList(id){
+  if (!id) {
+    return false;
+  }
+  $.ajax({
+    url: '{{LINK ajax/lists}}',
+    type: 'GET',
+    dataType: 'json',
+    data: {type: 'list',a:'edit',id:id},
+  })
+  .done(function(data) {
+    if (data.status == 200) {
+      swal({
+        title: '',
+        type: "",
+        html:data.html,
+        showCancelButton: true,
+        allowOutsideClick:false,
+        confirmButtonText:'<i class="fa fa-floppy-o"></i> {{LANG save}}',
+        cancelButtonText:'{{LANG cancel}}',
+        preConfirm: function (email) {
+        return new Promise(function (resolve, reject) {
+            name     = $(".edit-list-form").find('input').val();
+            desc     = $(".edit-list-form").find('textarea').val();
+            privacy  = $(".edit-list-form").find('select').val();
+            setTimeout(function() {
+              if (name == '') {
+                reject('{{LANG pl_name_required.}}');
+              }
+              else if(privacy < 0 || privacy > 1){
+                reject('{{LANG please_check_details}}');
+              }
+              else {
+                resolve();
+              }
+            }, 100)
+          })
+        }
+      }).then(function(){
+        if (!name){ return;}
+        $.ajax({
+          url: '{{LINK ajax/lists?type=list&a=update}}',
+          type: 'POST',
+          dataType: 'json',
+          data: {name:name,desc:desc,pr:privacy,id:id},
+        })
+        .done(function(data) {
+          if (data.status == 200) {
+            swal({
+              title:name,
+              text:"{{LANG pl_saved}}",
+              type:'success'
+            });
+
+            PT_Delay(function(){
+              swal.close();
+            },2000);
+          }
+          else if(data.status == 200){
+            swal(
+              'Error!',
+              'Something went wrong.Please try again later!',
+              'error'
+            );
+          }
+        })
+        .fail(function() {
+          swal.close();
+          console.log("error");
+        })
+      },
+      function(){
+        //Error
+      })
+    }
+  })
+  .fail(function() {
+    console.log("error");
+  })
+}
+
+function PT_DeleteList(id){
+  if (!id) { return false;}
+  swal({
+    title: '{{LANG confirmation}}',
+    text: "{{LANG confirm_delist}}",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: '{{LANG yes_del}}'
+  }).then(function(){
+    $.ajax({
+      url: '{{LINK ajax/lists}}',
+      type: 'GET',
+      dataType: 'json',
+      data: {type: 'list',a:'delist',id:id},
+    })
+    .done(function(data) {
+      if (data.status == 200) {
+        $("[data-playlist='"+id+"']").slideUp(function(){
+          $(this).remove();
+        });
+        
+        swal({
+          title:"{{LANG deleted}}",
+          text:data.name +  " {{LANG was_deleted}}",
+          type:"success"
+        });
+      }
+      else{
+        swal(
+          'Error!',
+          'Something went wrong.Please try again later!',
+          'error'
+        );
+      }
+    })
+    .fail(function() {
+      console.log("error");
+    })
+    
+  })
+}
+
+function PT_DelFromList(list_id,video_id){
+  if (!list_id || !video_id) {
+    return false;
+  }
+
+  $.ajax({
+    url: '{{LINK ajax/lists}}',
+    type: 'GET',
+    dataType: 'json',
+    data: {type: 'list',a:'delvid',video_id:video_id,list_id:list_id},
+  })
+  .done(function(data) {
+    if (data.status == 200) {
+      $("[data-video-id='"+video_id+"']").slideUp(function(){
+        $(this).remove();
+      })
+    }
+    else{
+      swal(
+        'Error!',
+        'Something went wrong.Please try again later!',
+        'error'
+      );
+    }
+  })
+  .fail(function() {
+    swal(
+      'Error!',
+      'Something went wrong.Please try again later!',
+      'error'
+    );
+  })
+}
+</script>
+
+<style>
+  
+
+
+</style>
+

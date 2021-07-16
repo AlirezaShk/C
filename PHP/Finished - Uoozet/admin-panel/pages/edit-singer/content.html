@@ -1,0 +1,160 @@
+<?php 
+
+if (empty($_GET['id']) || !is_numeric($_GET['id'])) {
+    header('Location: ' . PT_Link('404'));
+    exit();
+}
+
+$id       = PT_Secure($_GET['id']);
+$singer  = $db->where('id',$id)->getOne(T_SINGERS);
+
+if (empty($singer)) {
+    header('Location: ' . PT_Link('404'));
+    exit();
+}
+
+$singer->image = PT_GetMedia($singer->image);
+
+?>
+
+
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Singer > Edit singer</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Edit singer</h2>
+                </div>
+                <div class="body">
+                    <div class="create-singer-alert">
+                       
+                    </div>
+                    
+                    <form class="form submit-new-singer-settings" method="POST">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-line">
+                                <input type="text" class="form-control" name="name" value="<?php echo $singer->name; ?>">
+                                </div>
+                                <div class="form-line">
+                                    <textarea name="description" class="form-control"><?php echo $singer->description; ?></textarea>
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-line">
+                                    <div class="preview-singer-image">
+                                        <img src="<?php echo $singer->image; ?>" alt="Singer Image">
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save &amp; Publish</button>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="file" class="hidden" id="singer-image" name="image">
+                        <input type="hidden" name="id" value="<?php echo $id; ?>">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
+<script>
+    jQuery(document).ready(function($) {
+
+        $(".preview-singer-image").click(function(event) {
+            $("#singer-image").trigger('click');
+        });
+
+        $("#singer-image").change(function(event) {
+            var self       = $(this);
+            var image_blob = false;
+
+            if (window.URL !== undefined) {
+                image_blob = window.URL.createObjectURL(self.prop('files')[0]);
+            } 
+
+            else if (window.webkitURL !== undefined) {
+                image_blob = window.webkitURL.createObjectURL(self.prop('files')[0]);
+            } 
+
+            if (image_blob) {
+              $(".preview-singer-image").html("<img src='" + image_blob + "' alt='Picture'>");
+            }
+            
+        });
+
+        var form = $(".submit-new-singer-settings");
+        form.submit(function(event) {
+            console.log('mana');
+        });
+
+        form.ajaxForm({
+            url: "{{LINK aj/ap/update-singer}}",
+            type:"POST",
+            dataType:"json",
+            data:{},
+            beforeSend: function() {
+                
+            },
+            success: function(data) {
+                var message = $(".create-singer-alert");
+                if (data.status == 200) {
+                    scrollToTop();
+                    message.html('<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> New Article  has been successful saved!</div>');
+                    PT_Delay(function(){
+                        window.location.reload();
+                    },1000);
+                }
+
+                else if (data.status == 400) {
+                    scrollToTop();
+                    message.html('<div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> Please fill the required info!</div>');
+                }
+
+                else if (data.status == 401) {
+                    scrollToTop();
+                    message.html('<div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> Singer title is too short!</div>');
+                }
+
+                else if (data.status == 402) {
+                    scrollToTop();
+                    message.html('<div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> Singer description is too short!</div>');
+                }
+
+                else if (data.status == 403) {
+                    scrollToTop();
+                    message.html('<div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> Singer text is required!</div>');
+                } 
+
+                else if (data.status == 404) {
+                    scrollToTop();
+                    message.html('<div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> The file is too big, please increase your server upload limit in php.ini!</div>');
+                }
+
+                else if (data.status == 405) {
+                    scrollToTop();
+                    message.html('<div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> The Image file is Not valid.please select a valid image!</div>');
+                }
+
+                else if (data.status == 406) {
+                    scrollToTop();
+                    message.html('<div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> Invalid Category id.Please check your details!</div>');
+                }
+
+                else if (data.status == 500) {
+                    scrollToTop();
+                    message.html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> Error found, please try again later!</div>');
+                }
+            }
+        });
+    }); 
+</script>

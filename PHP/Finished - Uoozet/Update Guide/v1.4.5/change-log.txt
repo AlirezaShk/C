@@ -1,0 +1,21 @@
+Changes:
+[Added] Wasabi storage support.
+[Added] New theme.
+[Added] private, public and unlisted videos.
+[Added] Custom thumbnails when FFMPEG is enabled.
+[Added] Download button for all qualities [enable/disable]
+[Added] Import Facebook videos. {Requires APP ID AND SECRET KEY}
+[Added] URL Shortener when sharing a video link.
+[Added] Online Memebers In Admin > Manage users.
+[Added] Instagram username to profile.
+[Added] Age restriction, [ All | +18 Only ]
+[Added] Donation system (Anyone can donate to channels) [enable/disable]
+[Added] Video timestamp on home page / featured videos.
+[Added] Admin can now approve or disapprove videos before publishing.
+[Added] Admin can limit the upload videos of each user.
+[Added] RTL support for both themes.
+[Added] notifications when getting a new message in ajax mode.
+[Added] Upload video API.
+[Added] Change password, update user data API.
+[Improved] speed.
+[Fixed] few bugs.

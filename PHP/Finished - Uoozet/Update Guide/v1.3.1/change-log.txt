@@ -1,0 +1,7 @@
+Changes:
+[Added] Subscribers will get notified if channel added a new video.
+[Added] Messaging system (Websockets / Ajax).
+[Added] Import from specific YouTube channel.
+[Added] API documentation.
+[Added] nginx support.
+Fixed few bugs

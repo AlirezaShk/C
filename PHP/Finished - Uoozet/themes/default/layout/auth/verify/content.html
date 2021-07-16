@@ -1,0 +1,70 @@
+l<div class="container login-page">
+    <div class="login-form">
+        <h4>{{LANG lets_get_started}}</h4>
+    	<form action="{{LINK verify}}" method="POST">
+    	    <div class="errors form-group">{{ERRORS}}</div>
+    	     <div class="errors success form-group">{{SUCCESS}}</div>
+			<div class="form-group">
+				<input type="text" name="code" id="code" placeholder="{{LANG code}}" required value="">
+			</div>
+			{{CUSTOM_FIELDS}}
+
+			<div class="recaptcha">{{RECAPTCHA}}</div>
+			<div class="form-group">
+				<input type="submit" class="button" value ="{{LANG sign_up}}">
+			</div>
+		</form>
+    </div>    
+</div>
+<ul class="bg-bubbles">
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+</ul>
+<script>
+$(function() {
+	$('.button').on('click', function () {
+		if ($('#code').val()) {
+			$(this).val("{{LANG please_wait}}");
+		}
+	});
+});
+</script>
+<style>
+.bg-bubbles {
+  background: -webkit-linear-gradient(top left, #{{COLOR1}} 0%, #{{COLOR2}} 100%);
+  background: linear-gradient(to bottom right, #{{COLOR1}} 0%, #{{COLOR2}} 100%);
+}
+.login-page {
+	margin-top: 150px;
+}
+.login-form input[type=submit] {
+	color: #{{COLOR1}} !important;
+}
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #fff;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #fff;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #fff;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #fff;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+   color:    #fff;
+}
+</style>

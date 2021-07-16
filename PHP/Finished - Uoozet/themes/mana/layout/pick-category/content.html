@@ -1,0 +1,79 @@
+<div id="pick-cats-page" class="container">
+    <div class="pick-cats-liked">
+        {{LIKED}}
+    </div>
+    <div class="pick-cats-disliked">
+        {{DISLIKED}}
+    </div>
+    <div class="pick-cats-rest">
+        {{REST}}
+    </div>
+</div>
+<div class="pick-cats-button-wrapper">
+    <button onclick="submitLikes()">
+        {{LANG save}}
+    </button>
+</div>
+<script>
+    function chooseLikeCat(elem, type)
+    {
+        let classNames = {0: "picked-0",  1: "picked-1", 2: "reset"};
+        if(!$(elem).parent().hasClass(classNames[type])) {
+            $(elem).parent().removeClass(classNames[0]).removeClass(classNames[1]).removeClass(classNames[2]).addClass(classNames[type]);
+        } else {
+            $(elem).parent().removeClass(classNames[type]);
+        }
+    }
+    function submitLikes()
+    {
+        let likes = $("#pick-cats-page .picked-1");
+        let like_string = "";
+        if (likes.length === 0) {
+            like_string = null;
+        } else {
+            for (let i = 0; i < likes.length; i++) {
+                like_string += likes[i].id + "|";
+            }
+            like_string = like_string.substr(0, like_string.length - 1);
+        }
+
+        let dislikes = $("#pick-cats-page .picked-0");
+        let dislike_string = "";
+        if (dislikes.length === 0) {
+            dislike_string = null;
+        } else {
+            for (let i = 0; i < dislikes.length; i++) {
+                dislike_string += dislikes[i].id + "|";
+            }
+            dislike_string = dislike_string.substr(0, dislike_string.length - 1);
+        }
+
+        let resets_liked = $("#pick-cats-page .pick-cats-liked .reset");
+        let reset_liked_string = "";
+        if (resets_liked.length === 0) {
+            reset_liked_string = null;
+        } else {
+            for (let i = 0; i < resets_liked.length; i++) {
+                reset_liked_string += resets_liked[i].id + "|";
+            }
+            reset_liked_string = reset_liked_string.substr(0, reset_liked_string.length - 1);
+        }
+
+        let resets_disliked = $("#pick-cats-page .pick-cats-disliked .reset");
+        let reset_disliked_string = "";
+        if (resets_disliked.length === 0) {
+            reset_disliked_string = null;
+        } else {
+            for (let i = 0; i < resets_disliked.length; i++) {
+                reset_disliked_string += resets_disliked[i].id + "|";
+            }
+            reset_disliked_string = reset_disliked_string.substr(0, reset_disliked_string.length - 1);
+        }
+
+        $.post('{{LINK aj/add-cat-like}}?hash=' + $('.main_session').val(), {g_vid_cat: like_string, b_vid_cat: dislike_string, r_g_vid_cat: reset_liked_string, r_b_vid_cat: reset_disliked_string}, function(data, textStatus, xhr) {
+            if(data.status)
+                // console.log(data);
+                window.location.reload();
+        }, "json");
+    }
+</script>

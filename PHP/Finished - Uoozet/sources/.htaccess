@@ -1,0 +1,4 @@
+Order allow,deny
+Deny from all
+
+Header Set Access-Control-Allow-Origin "*"

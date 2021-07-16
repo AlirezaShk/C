@@ -1,0 +1,78 @@
+
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Channels > Add Channel</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Add Channel</h2>
+                </div>
+                <div class="body">
+
+                  <div class="row">
+                       <div class="col-md-12" style="margin-bottom:0;">
+                        <div class="add_channel_form_alert"></div>
+                            <form method="POST" id="add_channel_form">
+                              <div class="row">
+                                  <div class="col-md-2">
+                                      <div class="form-group form-float">
+                                          <div class="form-line">
+                                              <input type="text" class="form-control" name="username">
+                                              <label class="form-label">username</label>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-2">
+                                      <div class="form-group form-float">
+                                          <div class="form-line">
+                                              <input type="text" class="form-control" name="name">
+                                              <label class="form-label">name</label>
+                                          </div>
+                                      </div>
+                                  </div>
+                                <div class="clearfix"></div>
+                              <div class="col-md-2">
+                                  <button class="btn btn-info">Add</button>
+                              </div>
+                              </div>
+                              <div class="clearfix"></div>
+                           </form>
+                       </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+
+var add_channel_form = $('form#add_channel_form');
+
+add_channel_form.ajaxForm({
+    url: '{{LINK aj/ap/add_new_channel}}',
+    beforeSend: function() {
+        add_channel_form.find('.waves-effect').text("{{LANG please_wait}}");
+    },
+    success: function(data) {
+        if (data.status == 200) {
+            add_channel_form.find('.waves-effect').text('Save');
+            $('.add_channel_form_alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Channel successfully added</div>');
+            setTimeout(function () {
+                $('.add_channel_form_alert').empty();
+            }, 2000);
+            header("Location: ".PT_Link('manage-channels'));
+        }
+        else{
+          $('.add_channel_form_alert').html('<div class="alert alert-danger"><i class="fa fa-check"></i> '+data.message+'</div>');
+            setTimeout(function () {
+                $('.add_channel_form_alert').empty();
+            }, 2000);
+        }
+    }
+});
+
+
+</script>

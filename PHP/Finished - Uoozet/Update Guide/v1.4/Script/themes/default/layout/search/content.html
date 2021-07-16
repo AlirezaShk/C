@@ -1,0 +1,35 @@
+<div class="content pt_shadow">
+	<div class="col-md-12">
+		<div class="upload-head">
+			<h4><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> {{LANG search_results}}: {{KEYWORD}}</h4>
+			<hr>
+		</div>
+		<div class="videos-latest-list row">
+      		{{VIDEOS}}
+		</div>
+		<?php if (count($pt->videos) > 0 && empty($_GET['is_channel'])) { ?>
+            <div class="watch-video-show-more desc load-more" data-type="search" data-keyword="{{KEYWORD}}">
+                {{LANG show_more}}
+            </div>
+		<?php } ?>
+		<div class="clear"></div>
+	</div>
+	
+	<div class="clear"></div>
+</div>
+<?php if (!empty($pt->users )) { ?>
+<div class="content pt_shadow">
+	<div class="col-md-12">
+		<div class="upload-head">
+			<h4><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> {{LANG channels}}</h4>
+			<hr>
+		</div>
+		<div class=" row">
+      		{{USERS}}
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="clear"></div>
+</div>
+<?php } ?>
+

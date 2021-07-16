@@ -1,0 +1,198 @@
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="{{CONFIG theme_url}}/css/emoji-picker/emoji.css" rel="stylesheet">
+<div class="page-margin pt_shadow">
+    <div class="row">
+        <div class="col-md-4 mobilerightpane no-padding-right">
+            {{SIDEBAR}}
+        </div>
+        <div class="col-md-8 mobileleftpane no-padding-left">
+			<ul class="pt_msg_main">
+				<div class="settings-header pt_msg_header" style="padding: 0 20px;">
+					<div class="pull-left">
+						<h3 class="pull-left">
+							<svg style="position: absolute;margin-top: 13px;transform: rotate(180deg);" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left mobilemsgclose"><polyline points="15 18 9 12 15 6"></polyline></svg>
+						</h3>
+						<div class="chat-nav" >
+							<?php echo (!empty($pt->chat_user->name)) ? "<a style='color: #fff;' href='" . $pt->chat_user->url . "'>" . $pt->chat_user->name . "</a>" : "<a style='color: #fff;' class='user-link'></a>";?>
+							<?php if(!empty($pt->chat_user->text_time)) { ?> <h6>آخرین بازدید <?php echo $pt->chat_user->text_time ?></h6> <?php } ?>
+						</div>
+
+
+					</div>
+
+					<?php echo (!empty($pt->chat_user->name)) ? '<div class="pull-right " style="padding-top: 13px" id="delete-conversation"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></div>' : '';?>
+					<div class="clear"></div>
+				</div>
+				<button id="load-more-messages" title="Load more messages"><i class="fa fa-angle-up"></i></button>
+				<div class="pt_msg_joint">
+					<div class="user-messages user-setting-panel pt_msg_area">
+						{{HTML}}
+					</div>
+					<div class="user-send-message">
+						<form action="#" method="POST" id="new-message-form" <?php if (empty($_GET['id'])) { ?> style="visibility: hidden;" <?php } ?>>
+							<button type="submit" id="send-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+							<textarea data-emojiable="true" name="new-message" id="new-message" cols="30" rows="2" placeholder="{{LANG write_message}}"></textarea>
+
+							<input type="hidden" id="user-id" name="id" value="<?php echo $pt->chat_id; ?>">
+							<input type="hidden" id="user-avatar" value="<?php echo ($pt->chat_user->avatar) ? $pt->chat_user->avatar : "";?>">
+						</form>
+					</div>
+				</div>
+			</ul>
+        </div>
+        <div class="clear"></div>
+	</div>
+</div>
+<br>
+<script>
+$('.mobilemsgclose').on('click',function (){
+	$('.mobileleftpane').fadeOut(100);
+	$('.mobilerightpane').fadeIn(100);
+});
+
+var messagesInterval = <?php echo (!empty($pt->extra_config->ajax_message_update_interval)) ? $pt->extra_config->ajax_message_update_interval : 3000 ?>;
+function fetchMessages() {
+    $.post('{{LINK aj/messages/fetch}}', {id: $('#user-id').val(), last_id: $('.message:last').attr('data-id')}, function(data, textStatus, xhr) {
+        if (data.status == 200) {
+            if (data.message.length > 0) {
+                $('.messages').append(data.message);
+                 $('.user-messages').scrollTop($('.user-messages')[0].scrollHeight);
+                 $('.message.pull-right .metadata .tick').html('<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n\t  width="16" height="15" viewBox="0 0 594.149 594.149" style="enable-background:new 0 0 594.149 594.149;"\n\t xml:space="preserve">\n<g>\n\t<g id="done-all">\n\t\t<path d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1\n\t\t\tl-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z"/>\n\t</g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n</svg>');
+            }
+            if ($('#search-list').val() == 0) {
+                $('.messages-sidebar .list-group').html(data.users);
+            }
+            if(data.lastSeen > 0){
+                let readSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" id="msg-dblcheck-ack" x="2063" y="2076"><path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z" fill="#4fc3f7"></path></svg>';
+                $('.tick').html(readSvg);
+			}
+        }
+        setTimeout(function () {
+            fetchMessages();
+        }, messagesInterval);
+    });
+}
+$(document).on('click', '.messages-sidebar a', function(event) {
+    clearTimeout(messagesInterval);
+    /* Act on the event */
+});
+$(document).on('click', '#load-more-messages', function(event) {
+  event.preventDefault();
+  $('#load-more-messages i').removeClass('fa-angle-up');
+  $('#load-more-messages i').addClass('fa-spinner fa-spin');
+  $.post('{{LINK aj/messages/fetch}}', {id: $('#user-id').val(), first_id: $('.message:first').attr('data-id')}, function(data, textStatus, xhr) {
+        $('#load-more-messages i').removeClass('fa-spinner fa-spin');
+        $('#load-more-messages i').addClass('fa-angle-up');
+        if (data.status == 200) {
+            if (data.message.length > 0) {
+                $('.messages').prepend(data.message);
+            } else {
+                $('#load-more-messages').animate({
+                    top: "-50",
+                }, 200, function() {
+                    $('#load-more-messages').hide();
+                    $('#load-more-messages').css('top', '60px');
+                });
+            }
+            $('.user-messages').scrollTop(0);
+        }
+        $('#load-more-messages i').removeClass('fa-spinner fa-spin');
+        $('#load-more-messages i').addClass('fa-angle-up');
+    });
+});
+
+$(document).on('click', '#delete-conversation', function(event) {
+    if (!confirm("{{LANG are_you_sure_you_want_delete_chat}}")) {
+        return false;
+    }
+    $(this).find('i').toggleClass('fa-trash fa-spinner fa-spin');
+    $.post('{{LINK aj/messages/delete_chat}}', {id: $('#user-id').val()}, function(data, textStatus, xhr) {
+        $('#delete-conversation').find('i').removeClass('fa-spinner fa-spin');
+        $('#delete-conversation').find('i').addClass('fa-trash');
+        $('.messages').empty();
+    });
+});
+
+$(function() {
+        setTimeout(function () {
+            fetchMessages();
+        }, messagesInterval);
+        $('.user-messages').scrollTop($('.user-messages')[0].scrollHeight);
+        var $id = makeid();
+    	var form = $('form#new-message-form');
+
+        $('#search-list').on('keyup', function(event) {
+            $('#search-icon').toggleClass('fa-search fa-spinner fa-spin');
+            $.post('{{LINK aj/messages/search}}', {keyword: $(this).val()}, function(data, textStatus, xhr) {
+                $('#search-icon').toggleClass('fa-spinner fa-spin fa-search ');
+                if (data.status == 200) {
+                    $('.messages-sidebar .list-group').html(data.users);
+                }
+            });
+        });
+
+    	$('#new-message').on('keyup', function(event) {
+    		if (event.keyCode == 13 && !event.shiftKey) {
+                $id = makeid();
+                if ($(this).val().length > 1) {
+                    form.submit();
+                } else {
+                    $('#new-message').val('');
+                }
+    		}
+    	});
+		$('.emoji-wysiwyg-editor').on('keyup', function(event) {
+			if (event.keyCode == 13 && !event.shiftKey) {
+				$id = makeid();
+				if ($(this).val().length > 1) {
+					form.submit();
+				} else {
+					$('.emoji-wysiwyg-editor').html('');
+				}
+			}
+		});
+
+
+        form.ajaxForm({
+            url: '{{LINK aj/messages/new}}?hash=' + $('.main_session').val(),
+            data: {message_id: $('#message_id').val()},
+            beforeSubmit: function(formData, jqForm, options) {
+                if ($('.messages').length == 0) {
+                    $('.user-messages').html('<div class="messages"></div>');
+                }
+                if ($('#new-message').val().length >= 1) {
+                    formData.push({ name: 'message_id', value: $id });
+                    $('.messages').append('<div class="data_message" data-id="' + $id + '"><div class="message to-user pull-right" data-id=""><div class="user-message">' + nl2br(escapeHTML($('#new-message').val())) + '</div><div class="clear"></div></div><div class="clear"></div></div>');
+                    $('#new-message').val('');
+                    $('.emoji-wysiwyg-editor').html('');
+                    $('.user-messages').scrollTop($('.user-messages')[0].scrollHeight);
+                    $id = makeid();
+                } else {
+                    $('#new-message').val('');
+                }
+            },
+            success: function(data) {
+                $('.data_message[data-id="' + data.message_id + '"]').html(data.message);
+            }
+        });
+    });
+</script>
+
+<script src="{{CONFIG theme_url}}/js/emoji-picker/config.js"></script>
+<script src="{{CONFIG theme_url}}/js/emoji-picker/util.js"></script>
+<script src="{{CONFIG theme_url}}/js/emoji-picker/jquery.emojiarea.js"></script>
+<script src="{{CONFIG theme_url}}/js/emoji-picker/emoji-picker.js"></script>
+<script>
+    $(function() {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+            emojiable_selector: '[data-emojiable=true]',
+            assetsPath: '{{CONFIG theme_url}}/img/emoji-picker/',
+            popupButtonClasses: 'fa fa-smile-o'
+        });
+        // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
+        // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
+        // It can be called as many times as necessary; previously converted input fields will not be converted again
+        window.emojiPicker.discover();
+    });
+</script>

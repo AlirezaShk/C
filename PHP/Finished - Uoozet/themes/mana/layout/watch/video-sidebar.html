@@ -1,0 +1,18 @@
+<?php global $related_video; ?>
+<div class="video-wrapper top-video-wrapper pt_video_side_vids" data-sidebar-video="{{ID}}">
+	<a href="{{URL}}" <?= ($related_video->owner->admin == 1 && ($related_video->owner->id !== 1 && $related_video->owner->username !== "AlirezaShk"))?(''):('data-load="?link1=watch&id={{V_ID}}') ?> ">
+		<div class="video-thumb pull-left">
+			<img src="{{THUMBNAIL}}" alt="{{TITLE}}">
+			<img src="{{THUMBNAIL}}" class="blurred">
+		</div>
+	<div class="video-title">
+		{{TITLE}}
+	</div>
+	<div class="video-publisher">{{USER_NAME}}</div>
+	<div class="video-views">
+		{{VIEWS}} {{LANG views}}
+	</div>
+	<div class="clear"></div>
+	</a>
+
+</div>
