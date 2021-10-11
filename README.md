@@ -13,6 +13,7 @@ policies of their respective owners, I cannot give out the original source codes
      [this link](https://madavi.ir/).
 + **React**: My favorite field in programming is backend development but frontend focused projects, developed using 
 ReactJs is also one of my skills.
++ **Python**: My latest personal project, coded using Django (Unfinished).
 #### Final Note: 
 _These projects don't encapsulate my full programming skill set or my limits. They are simply, samples of what has been asked of me
  by my clients or research tasks, up to now._  

@@ -1,0 +1,45 @@
+{% load i18n %}
+<div class="researcher-list row card mb-2">
+	<div class="name card-header" style='background-image: url("{{ data.university.logo }}"); background-color: var(--{{ data.university.color }}); color: var(--{{data.university.color}}-font)'>
+		<div class='card-header-content'>
+			<h5 data-cat='prof-name'>{{ data.name }}</h5>
+			<span data-cat='prof-role'>{{ data.role }}</span>
+		</div>
+	</div>
+	<div class="card-body">
+		<h6 class="u-name card-title" data-cat='uni-name'>
+			{{ data.university.name }}
+		</h6>
+		<p>
+		  	h-index: {{ data.hindex }}
+	  	</p>
+		<p>
+		  	{% translate _('Research Fields: ') %}
+	  	</p>
+		<div class="fields card-text row gy-2 px-2" data-cat='prof-field'>
+			{% for dep, fields in data.fields.items %}
+				{% for field in fields %}
+				<div class="field">
+					{{field}}
+				</div>
+				{% endfor %}
+			{% endfor %}
+		</div>
+		<div class="accordion-item more mt-4">
+			<h2 class="accordion-header test" id="heading-{{data.id}}">
+			  <button class="accordion-button collapsed test" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{data.id}}" aria-expanded="false" aria-controls="collapse-{{data.id}}">
+			  	{% translate _('More Info') %}
+			  </button>
+			</h2>
+			<div id="collapse-{{data.id}}" class="accordion-collapse collapse" aria-labelledby="heading-{{data.id}}" data-bs-parent="#accordionExample">
+			  <div class="accordion-body">
+		  		<h6>{% translate _('Biography') %}</h6>
+		  		<p>{{ data.bio|linebreaksbr }}</p>
+		  		<hr class="my-2">
+		  		<h6>{% translate _('Interests') %}</h6>
+		  		<p>{{ data.interests|linebreaksbr }}</p>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>

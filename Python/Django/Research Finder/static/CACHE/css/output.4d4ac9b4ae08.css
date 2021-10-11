@@ -1,0 +1,33 @@
+.has-error-msg.invalid::before {
+    content: attr(error-message);
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    max-width: 100%;
+    padding: .25rem .5rem;
+    margin-top: .1rem;
+    font-size: .875rem;
+    color: #fff;
+    background-color: rgba(220,53,69,.9);
+    border-radius: .25rem;
+    top: 100%;
+    height: auto;
+    white-space: break-spaces;
+}
+
+#currentFilters > button > input[type='text'] {
+    background: transparent;
+    color: inherit;
+    border-style: dotted;
+    width: 6ch;
+
+    &:focus {
+	    background: white;
+	    color: black;
+	}
+}
+#results .researcher-list .more .accordion-header > button {
+	border-top: 1px;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+}

@@ -1,0 +1,45 @@
+{
+    "Physics": {
+        "98": {
+            "name": "Massachusetts Institute of Technology (MIT)",
+            "urls": [
+                {
+                    "Astrophysics Observation, Instrumentation, and Experiment": "https://physics.mit.edu/research-areas/astrophysics-observation-instrumentation-and-experiment/"
+                },
+                {
+                    "Astrophysics Theory": "https://physics.mit.edu/research-areas/astrophysics-theory/"
+                },
+                {
+                    "Atomic Physics": "https://physics.mit.edu/research-areas/atomic-physics/"
+                },
+                {
+                    "Biophysics": "https://physics.mit.edu/research-areas/biophysics/"
+                },
+                {
+                    "Condensed Matter Experiment": "https://physics.mit.edu/research-areas/condensed-matter-experiment/"
+                },
+                {
+                    "Condensed Matter Theory": "https://physics.mit.edu/research-areas/condensed-matter-theory/"
+                },
+                {
+                    "High Energy and Particle Theory": "https://physics.mit.edu/research-areas/high-energy-and-particle-theory/"
+                },
+                {
+                    "Nuclear Physics Experiment": "https://physics.mit.edu/research-areas/nuclear-physics-experiment/"
+                },
+                {
+                    "Particle Physics Experiment": "https://physics.mit.edu/research-areas/particle-physics-experiment/"
+                },
+                {
+                    "Quantum Gravity and Field Theory": "https://physics.mit.edu/research-areas/quantum-gravity-and-field-theory/"
+                },
+                {
+                    "Quantum Information Science": "https://physics.mit.edu/research-areas/quantum-information-science/"
+                },
+                {
+                    "Strong Interactions and Nuclear Theory": "https://physics.mit.edu/research-areas/strong-interaction-and-nuclear-theory/"
+                }
+            ]
+        }
+    }
+}

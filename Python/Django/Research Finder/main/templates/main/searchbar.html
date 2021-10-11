@@ -1,0 +1,54 @@
+{% load i18n %}
+<div id="search-bar" class="input-group mb-3">
+	<button class="btn btn-outline-secondary dropdown-toggle has-error-msg" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" error-message='{% translate _('Please Select One Filter') %}'>{% translate _('Filter Type') %}</button>
+	<ul class="dropdown-menu filters user-select-none">
+		{% for filter_cat, segments in filters.items %}
+		<li class='position-relative'><span class="dropdown-item-text" href="#">{% translate filter_cat %}</span></li>
+		<li class='position-relative'><hr class="dropdown-divider"></li>
+			{% for filter_segments in segments %}
+		<li class='position-relative filter-type' data-type="{{filter_segments.value}}">
+			<i class="bi-caret-right-fill position-absolute top-0 bottom-0 m-auto" style='width: fit-content;height: fit-content; left: 1rem; color: #0005;' width="32" height="32"></i>
+			<span class="dropdown-item ps-5" style='cursor: pointer;' href="#">
+				{% translate filter_segments.label %}
+			</span>
+		</li>
+			{% endfor %}
+			{% if forloop.last %}
+			{% else %}
+		<li class='position-relative'><hr class="dropdown-divider"></li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+	<input type="text" class="form-control has-error-msg" placeholder="{% translate _('Type and submit a filter') %}" aria-label="{% translate _('Type and submit a filter') %}" aria-describedby="submit-search" name="filter" id='new-filter' error-message='{% translate _('Keyword Cannot Be Empty') %}'>
+	<button class="btn btn-outline-secondary" type="button" id="submit-search">{% translate _('Narrow Down') %}</button>
+	<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">{% translate _('Sort By') %}</button>
+	<ul class="dropdown-menu sorters user-select-none">
+		{% for sort_cat, segments in sorters.items %}
+		<li class='position-relative'><span class="dropdown-item-text" href="#">{% translate sort_cat %}</span></li>
+		<li class='position-relative'><hr class="dropdown-divider"></li>
+			{% for sort_segments in segments %}
+		<li class='position-relative filter-type' data-type="{{sort_segments.value}}">
+			<i class="bi-dash position-absolute top-0 bottom-0 m-auto" style='width: fit-content;height: fit-content; left: 1rem; color: #000f;' width="32" height="32"></i>
+			<span class="dropdown-item ps-5" style='cursor: pointer;' href="#">
+				{% translate sort_segments.label %}
+			</span>
+		</li>
+			{% endfor %}
+			{% if forloop.last == False %}
+		<li class='position-relative'><hr class="dropdown-divider"></li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+</div>
+<div id="currentFilters" class='p-4'>
+	{% load sessionHandler %}
+	{% for filter in request.session.currentFilters %}
+		<button type="button" class="btn btn-outline-danger p-2 mt-2 me-2" data-code='{{ forloop.counter|add:"-1" }}'>
+	        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+		  		<path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z"></path>
+			</svg>
+			<span>{{ filter|parseSessionVar:"label" }}</span>
+            <input type="text" value="{{ filter|parseSessionVar:"value" }}" data-f-type="{{ filter|parseSessionVar:"filter-type" }}">
+		</button>
+    {% endfor %}
+</div>
