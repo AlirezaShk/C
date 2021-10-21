@@ -1,9 +1,0 @@
-Changes:
-1. Added full API system for the upcoming native android app.
-2. Added verification system.
-3. Added announcement system.
-4. Added ban user by IP to admin panel.
-5. Added custom JavaScript/CSS to admin panel.
-6. Added mp4 links support in import video tab/\.
-7. Added share to wowonder button to watch page.
-8. Fixed few important bugs
