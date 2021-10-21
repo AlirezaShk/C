@@ -1,2 +1,0 @@
-Changes:
-Fixed few bugs
