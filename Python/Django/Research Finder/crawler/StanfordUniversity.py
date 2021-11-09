@@ -61,22 +61,6 @@ class UniversityCrawler():
                 continue
             except Researcher.DoesNotExist:
                 pass
-
-            # hindex:
-            # self.webdriver.get("https://www.google.com/search?q=" +
-            #                    name.replace(' ', '+') + "+%40+" +
-            #                    university.name.replace(' ', '+') + "+h-index+scholar.google")
-            # self.webdriver.find_elements_by_css_selector('#search a')[
-            #     0].click()
-            # try:
-            #     hindex = WebDriverWait(self.webdriver, 10).until(
-            #         EC.presence_of_element_located(
-            #             (By.XPATH, "//a[text()='h-index']/../../td[2]"))
-            #     )
-            #     hindex.get_attribute(
-            #         'textContent')
-            # except TimeoutException:
-            #     hindex = '<Requires Update>'
             hindex=''
 
             try:

@@ -27,12 +27,11 @@ class UniSpider(scrapy.Spider):
 
     def __init__(self):
 
-
-        options = webdriver.ChromeOptions()
+        # options = webdriver.ChromeOptions()
         # options.add_argument("--headless")
-        driver = webdriver.Chrome(
-            '/home/alirezashk/apps/chromedriver', options=options)
-        self.unis.webdriver = driver
+        # driver = webdriver.Chrome('./'+
+        #     settings.STATIC_URL + 'config/chromedriver', options=options)
+        # self.unis.webdriver = driver
         # driver.quit()
         # driver.get(
         #     'https://www.google.com/search?q=Steven+Chu+%40+Stanford+University+h-index')
@@ -53,8 +52,6 @@ class UniSpider(scrapy.Spider):
             uni_index = 0
             for dep, dep_data in data.items():
                 for uni_id, uni_data in dep_data.items():
-                    # if uni_data['name'] != "Harvard University":
-                    #     continue
                     uni = EachUniversity(int(uni_id), uni_data['name'])
                     for field_url in uni_data['urls']:
                         for field in field_url:
@@ -63,7 +60,6 @@ class UniSpider(scrapy.Spider):
                             else:
                                 self.start_urls.append(field_url[field])
                             uni.addURL(dep=dep, url=field_url[field])
-                        break
                     self.unis.addUni(uni)
 
     def parse(self, response):

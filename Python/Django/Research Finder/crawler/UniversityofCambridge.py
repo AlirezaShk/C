@@ -22,10 +22,10 @@ class UniversityCrawler():
             title = info.css(
                 '.field-group-format-toggler')[i].css('a::text').get()
             text = info.css('.field-group-format-wrapper')[i]
+            links = text.css('a')
             if title == 'Biography':
                 person.bio = '\n'.join(
                     text.css('.field-item *::text').getall())
-                links = text.css('a')
                 for link in links:
                     label = link.css('::text').get()
                     url = link.css('::attr(href)').get()
@@ -153,30 +153,6 @@ class UniversityCrawler():
                 university.save()
             email = person.css(
                 '.field-name-field-sd-email-address a::attr(href)').get()
-
-            # hindex:
-            # self.webdriver.get("https://www.google.com/search?q=" +
-            #                    name.replace(' ', '+') + "+%40+" +
-            #                    university.name.replace(' ', '+') + "+h-index+scholar.google")
-            # self.webdriver.find_elements_by_css_selector('#search a')[
-            #     0].click()
-            # try:
-            #     hindex = WebDriverWait(self.webdriver, 10).until(
-            #         EC.presence_of_element_located(
-            #             (By.XPATH, "//a[text()='h-index']/../../td[2]"))
-            #     )
-            #     hindex.get_attribute(
-            #         'textContent')
-            # except TimeoutException:
-            #     try:
-            #         hindex = WebDriverWait(self.webdriver, 10).until(
-            #             EC.presence_of_element_located(
-            #                 (By.XPATH, "//a[text()='h 指標']/../../td[2]"))
-            #         )
-            #         hindex.get_attribute(
-            #             'textContent')
-            #     except TimeoutException:
-            #         hindex = '<Requires Update>'
             hindex = ''
             try:
                 person = Researcher.objects.get(

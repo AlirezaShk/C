@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  python:
+    build:
+      context: ./containers/python
+      dockerfile: Dockerfile
+    container_name: ${PROJECT_NAME}-py
+    command: python manage.py runserver 0.0.0.0:8000
+    ports: 
+      - ${PYTHON_PORT}:${EXPOSE_PORT}
+    volumes:
+      - .:/usr/src/app
+    restart: always
+    depends_on:
+      mysql: 
+        condition: service_healthy
+
+  mysql:
+    image: mariadb:10.5.12-focal
+    container_name: ${PROJECT_NAME}-db
+    ports:
+      - ${MYSQL_PORT}:3306
+    environment:
+      MYSQL_HOST: localhost
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PORT: 3306
+      SERVICE_TAGS: ${SERVICE_TAGS}
+      SERVICE_NAME: ${SERVICE_NAME}
+      MYSQL_ROOT_HOST: '%'
+    healthcheck: 
+      test: ["CMD-SHELL", "bash", "-c", "echo > /dev/tcp/localhost/33106"]
+      interval: 1s
+    restart: always
+
+  # selenium:
+  #   image: selenium/standalone-chrome
+  #   ports:
+  #   - 4444:4444
+# Docker Networks
+networks:
+  default:
+    name: pfs-network
+    driver: bridge
+# Volumes
+volumes:
+  dbdata:
+    driver: local

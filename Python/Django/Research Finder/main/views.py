@@ -32,7 +32,7 @@ def home(request):
         ],
     }
     results = Researcher.objects.all()
-    print(results[0].fields)
+    # print(results[0].fields)
     return render(request, 'main/home.html', {
         "filters": filter_types,
         "sorters": sort_types,
@@ -42,30 +42,36 @@ def home(request):
     })
 
 
-def updateURLs(request):
-    # Truncate DB
-    Researcher.objects.all().delete()
-    University.objects.all().delete()
-    Location.objects.all().delete()
-    City.objects.all().delete()
-    Country.objects.all().delete()
+def updateURLs(request, specificUniId=None):
+    if specificUniId == None:
+        # Truncate DB
+        Researcher.objects.all().delete()
+        University.objects.all().delete()
+        Location.objects.all().delete()
+        City.objects.all().delete()
+        Country.objects.all().delete()
 
     csvList = glob.glob(str(settings.BASE_DIR) +
                         settings.STATIC_URL + "files/*50.csv")
     urls = {}
+    currentField = ''
+    currentRank = None
     for csvPath in csvList:
         with open(csvPath) as csvFile:
             csvReader = csv.DictReader(csvFile)
             for rows in csvReader:
+                currentRank = rows['Rank'] if len(
+                    rows['Rank'].strip()) > 0 else currentRank
+                if specificUniId != None and currentRank != specificUniId:
+                    continue
                 if len(rows['Rank'].strip()) > 0:
-                    if rows['Rank'] == '2':
-                        break
                     if len(rows['URL'].strip()) == 0:
                         continue
                     # New Uni
                     cnt = Country.objects.create(
                         name=rows['Country'].strip(), short_name="sn")
-                    ct = City.objects.create(name=rows['Country'].strip(), country=cnt)
+                    ct = City.objects.create(
+                        name=rows['Country'].strip(), country=cnt)
                     loc = Location.objects.create(
                         country=cnt,
                         city=ct,
@@ -78,21 +84,37 @@ def updateURLs(request):
                         print(rows)
                         exit()
                     currentDep = rows['Department'].strip()
-                    try:
-                        currentUni = University.objects.create(
-                            name=rows['University'].strip(),
-                            url=mainURL,
-                            location=loc,
-                            ranking={currentDep: rows['Rank'].strip()}
-                        )
-                    except:
-                        # Unique Contsraint on Name Fails:
-                        if len(rows['University'].strip()) > 0:
+                    if specificUniId == None:
+                        try:
+                            currentUni = University.objects.create(
+                                name=rows['University'].strip(),
+                                url=mainURL,
+                                location=loc,
+                                ranking={currentDep: rows['Rank'].strip()}
+                            )
+                        except:
+                            # Unique Contsraint on Name Fails:
+                            if len(rows['University'].strip()) > 0:
+                                currentUni = University.objects.get(
+                                    name=rows['University'].strip())
+                            else:
+                                currentUni = University.objects.get(
+                                    name=currentUni.name)
+                            currentUni.ranking[currentDep] = rows['Rank'].strip(
+                            )
+                            currentUni.save()
+                    else:
+                        try:
                             currentUni = University.objects.get(
                                 name=rows['University'].strip())
-                        else:
-                            currentUni = University.objects.get(
-                                name=currentUni.name)
+                        except:
+                            # None Existent
+                            currentUni = University.objects.create(
+                                name=rows['University'].strip(),
+                                url=mainURL,
+                                location=loc,
+                                ranking={currentDep: rows['Rank'].strip()}
+                            )
                         currentUni.ranking[currentDep] = rows['Rank'].strip()
                         currentUni.save()
                     if currentDep in urls:
@@ -103,18 +125,40 @@ def updateURLs(request):
                         "name": currentUni.name, "urls": []
                     }
                 # RA -> URL
-                urls[currentDep][currentUni.id]['urls'].append(
-                    {rows['Research Area']: rows['URL'].strip()})
+                if len(rows['Research Subarea'].strip()) == 0:
+                    urls[currentDep][currentUni.id]['urls'].append(
+                        {rows['Research Area']: rows['URL'].strip()})
+                else:
+                    if (rows['Research Area'] in urls[currentDep][currentUni.id]['urls']) or (len(rows['Research Area'].strip()) == 0):
+                        pass
+                    else:
+                        currentField = rows['Research Area']
+                        urls[currentDep][currentUni.id]['urls'].append(
+                            {currentField: []})
+                        index = getRFieldIndexFromURLList(
+                            urls[currentDep][currentUni.id]['urls'], currentField)
+                    print(index, currentField)
+                    urls[currentDep][currentUni.id]['urls'][index][currentField].append(
+                        {rows['Research Subarea']: rows['URL'].strip()})
+
     jsonPath = str(settings.BASE_DIR) + "/urls.json"
     with open(jsonPath, 'w') as jsonFile:
         jsonFile.write(json.dumps(urls, indent=4))
+        jsonFile.close()
     return JsonResponse({'success': True})
+
+
+def getRFieldIndexFromURLList(urls, researchField):
+    for i in range(len(urls)):
+        for key, value in urls[i].items():
+            if key == researchField:
+                return i
 
 
 def resetSessionArr(sessionArr):
     origin = sessionArr
     i = 0
-    print(origin)
+    # print(origin)
     sessionArr = []
     for item in origin:
         sessionArr.append(item)
@@ -142,7 +186,7 @@ def filterAdd(request):
     for i in range(offset, len(data) + offset, 2):
         request.session['currentFilters'].append(
             {"key": data[i - offset], "value": data[i + 1 - offset]})
-    print(request.session['currentFilters'])
+    # print(request.session['currentFilters'])
     return JsonResponse({'success': True})
 
 

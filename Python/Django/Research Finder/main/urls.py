@@ -4,6 +4,8 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('api/update', views.updateURLs, name='update-urls'),
+    path('api/update/<specificUniId>',
+         views.updateURLs, name='update-urls-specific'),
     path('api/filter/add', views.filterAdd, name='add-filter'),
     path('api/filter/delete', views.filterDel, name='del-filter'),
     path('api/filter/get', views.filterList, name='get-filter'),

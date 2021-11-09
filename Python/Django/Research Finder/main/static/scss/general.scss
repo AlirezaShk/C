@@ -9,6 +9,24 @@
 	--harvard-red-font: #fff;
 	--mit-white: #edeef2;
 	--mit-white-font: #303c6c;
+
+	--oxford-midnight-blue: #002147;
+	--oxford-midnight-blue-font: #fff;
+
+	--berkeley-white: #cacaca;
+	--berkeley-white-font: #000;
+
+	--caltech-white: #f9f9f9;
+	--caltech-white-font: #000;
+
+	--princeton-dark-teal: #4a6b82;
+	--princeton-dark-teal-font: #fff;
+
+	--ICL-blue: #003e74;
+	--ICL-blue-font: #fff;
+
+	--Tsinghua-red: #a5090d;
+	--Tsinghua-red-font: #fff;
 }
 
 .has-error-msg.invalid::before {
@@ -62,4 +80,5 @@
 .researcher-list .card-header {
     background-position: center;
     background-repeat: no-repeat;
+    background-size: contain;
 }

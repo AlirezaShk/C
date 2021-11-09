@@ -152,23 +152,6 @@ class UniversityCrawler():
                 university.logo = university.logo[0:len(university.logo) - 2]
                 university.color = 'mit-white'
                 university.save()
-            # hindex:
-            # self.webdriver.get("https://www.google.com/search?q=" +
-            #                    name.replace(' ', '+') + "+%40+" +
-            #                    university.name.replace(' ', '+') + "+h-index+scholar.google")
-            # self.webdriver.find_elements_by_css_selector('#search a')[
-            #     0].click()
-            # try:
-            #     hindex = WebDriverWait(self.webdriver, 10).until(
-            #         EC.presence_of_element_located(
-            #             (By.XPATH, "//a[text()='h-index']/../../td[2]"))
-            #     )
-            #     hindex.get_attribute(
-            #         'textContent')
-            # except TimeoutException:
-            #     hindex = '<Requires Update>'
-            # if person_urls[0]['url'] != 'https://physics.mit.edu/faculty/matthew-evans/':
-            #     continue
             hindex = ''
             try:
                 person = Researcher.objects.get(

@@ -28,7 +28,7 @@ class Article(models.Model):
 
 class Researcher(models.Model):
     name = models.CharField(max_length=400)
-    email = models.CharField(max_length=250)
+    email = models.CharField(max_length=250, default='<Requires Update>')
     urls = models.JSONField(max_length=800, null=True)
     articles = models.ManyToManyField(Article)
     university = models.ForeignKey(University, on_delete=models.RESTRICT)
@@ -40,6 +40,7 @@ class Researcher(models.Model):
     tags = models.JSONField(max_length=800, null=True)
     relatedPeople = models.JSONField(max_length=400, null=True)
     contactInfo = models.TextField(null=True)
+    publications_raw = models.TextField(null=True)
 
     def __str__(self):
         return self.name
