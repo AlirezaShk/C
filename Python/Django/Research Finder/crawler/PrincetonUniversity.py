@@ -110,7 +110,6 @@ class UniversityCrawler():
                 person.bio = person.bio.replace(text, text + '\n')
             else:
                 person.bio += text + '\n'
-        person.bio = None if person.bio == '' else person.bio
         # urls = header.css('.page-header-bottom-overlay .link-arrow')
         # for url in urls:
         #     person.urls.append(
@@ -119,6 +118,10 @@ class UniversityCrawler():
         # for url in urls:
         #     person.urls.append(
         #         {'label': url.css('::text').get(), 'url': url.css("::attr(href)").get()})
+        if len(str(person.bio or '').replace('\n', '').strip()) in [0, 1]:
+            person.bio = None
+        if len(str(person.interests or '').replace('\n', '').strip()) in [0, 1]:
+            person.interests = None
         person.save()
 
     def parsePeople(self, response):

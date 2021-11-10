@@ -64,6 +64,8 @@ class UniversityCrawler():
             '#content .field-name-field-professional-title .field-item::text').getall())
         person.contactInfo = '\n'.join(response.css(
             '#content .contact-details .field .field-item::text').extract())
+        if len(str(person.bio or '').replace('\n', '').strip()) in [0, 1]:
+            person.bio = None
         person.save()
 
     def parsePeople(self, response):

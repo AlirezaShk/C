@@ -19,7 +19,7 @@ class University(models.Model):
 
 class Article(models.Model):
     title = models.CharField(max_length=400)
-    url = models.CharField(max_length=200, default=None)
+    url = models.CharField(max_length=200, null=True)
     fields = models.JSONField(max_length=500, null=True)
 
     def __str__(self):

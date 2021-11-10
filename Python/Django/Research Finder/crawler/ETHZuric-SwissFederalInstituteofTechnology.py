@@ -39,7 +39,6 @@ class UniversityCrawler():
                     continue
                 text += txt.strip()
             person.bio += title + '\n' + text + '\n'
-        person.bio = None if person.bio == '' else person.bio
         header = response.css('.page-header')
         person.email = header.css(
             '.user-profile-link-email .link-email::attr(href)').get()
@@ -62,6 +61,10 @@ class UniversityCrawler():
         for url in urls:
             person.urls.append(
                 {'label': url.css('::text').get(), 'url': url.css("::attr(href)").get()})
+        if len(str(person.bio or '').replace('\n', '').strip()) in [0, 1]:
+            person.bio = None
+        if len(str(person.interests or '').replace('\n', '').strip()) in [0, 1]:
+            person.interests = None
         person.save()
 
     def parsePeople(self, response):

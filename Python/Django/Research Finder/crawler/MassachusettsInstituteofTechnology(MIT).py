@@ -61,10 +61,6 @@ class UniversityCrawler():
                 print('--------------- DEBUG ---------------')
                 print(person.urls[0]['url'])
                 print(elem.css('::text').get())
-        if person.bio == '':
-            person.bio = None
-        if person.interests == '':
-            person.interests = None
         for link_array in more_urls:
             for link in link_array:
                 label = link.css('::text').get()
@@ -129,6 +125,10 @@ class UniversityCrawler():
                     print('----------------- DEBUG -----------------')
                     print(person.urls[0]['url'])
                     print(exInf.xpath('@class').get())
+        if len(str(person.bio or '').replace('\n', '').strip()) in [0, 1]:
+            person.bio = None
+        if len(str(person.interests or '').replace('\n', '').strip()) in [0, 1]:
+            person.interests = None
         person.save()
 
     def parsePeople(self, response):

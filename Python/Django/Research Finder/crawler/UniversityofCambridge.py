@@ -125,6 +125,10 @@ class UniversityCrawler():
                     person.urls.append({'label': 'Other', 'url': url})
                 else:
                     person.urls.append({'label': label, 'url': url})
+        if len(str(person.bio or '').replace('\n', '').strip()) in [0, 1]:
+            person.bio = None
+        if len(str(person.interests or '').replace('\n', '').strip()) in [0, 1]:
+            person.interests = None
         person.save()
 
     def parsePeople(self, response):

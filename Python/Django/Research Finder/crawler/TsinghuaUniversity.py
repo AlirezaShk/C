@@ -10,117 +10,71 @@ class UniversityCrawler():
         self.id = id
         self.currentDep = department
         self.webdriver = webdriver
+        self.urlComplement = {
+            'Physics': '/phyen'
+        }
 
     def eachPersonInfo(self, response):
-    	pass
-        # url = response.request.url
-        # university = University.objects.get(id=self.id)
-        # # print(url)
-        # # print({"label": "University Page", "url": url})
-        # person = Researcher.objects.get(
-        #     urls__contains={"label": "University Page", "url": url},
-        #     university=university
-        # )
-        # content = response.css("#content")
-        # person.name = content.css('#page-title::text').get()
-        # contactInfo = content.css("#people-contact-info")
-        # person.contactInfo = ''
-        # for field in contactInfo.css(".field"):
-        #     classList = field.xpath("@class").get()
-        #     # is role?
-        #     if 'field-name-field-people-position' in classList:
-        #         person.role = ', '.join(
-        #             field.css(".field-item::text").extract()
-        #         )
-        #     elif 'field-name-field-people-phone' in classList:
-        #         person.contactInfo += 'Phone: ' + ', '.join(
-        #             field.css(".field-item::text").extract()
-        #         ) + '\n'
-        #     elif 'field-name-field-people-email' in classList:
-        #         person.email += field.css("a::attr(href)").get()
-        #     elif 'field-name-field-people-office-location' in classList:
-        #         person.contactInfo += 'Office Location: ' + ', '.join(
-        #             field.css(".field-item::text").extract()
-        #         ) + '\n'
-        #     elif 'field-name-field-people-website' in classList:
-        #         urls = field.css(".field-item a")
-        #         for url in urls:
-        #             person.urls.append({
-        #                 'label': url.css('::text').get(),
-        #                 'url': url.css('::attr(href)').get(),
-        #             })
-        #     elif 'field-name-field-advisees' in classList:
-        #         relatedPeople = field.css(".field-item .view-content li")
-        #         for relPerson in relatedPeople:
-        #             person.relatedPeople.append({
-        #                 'title': 'Advisee',
-        #                 'name': relPerson.css('a::text').get(),
-        #                 'url': relPerson.css('a::attr(href)').get()
-        #             })
-        #     elif 'field-name-field-people-assistant' in classList:
-        #         relatedPeople = field.css(".field-item .view-content li")
-        #         for relPerson in relatedPeople:
-        #             person.relatedPeople.append({
-        #                 'title': 'Assistant',
-        #                 'name': relPerson.css('a::text').get(),
-        #                 'url': relPerson.css('a::attr(href)').get()
-        #             })
-        #     else:
-        #         print("-------------- NEW FIELD --------------")
-        #         print(classList)
-        #         print("\n")
-        # info = content.css('#people-detail-info')
-        # person.interests = None
-        # person.bio = ''
-        # bio = info.css('.field-name-body .field-item *')
-        # for item in bio:
-        #     text = ', '.join(item.css("::text").extract()).strip()
-        #     if any([
-        #         text == ' , ',
-        #         text == ', ',
-        #         text == ' ',
-        #         text == '\n',
-        #         len(text) == 1,
-        #         len(text) == 0
-        #     ]):
-        #         continue
-        #     if item.xpath('name()').get() == 'sup':
-        #         if person.bio[-2:] == ', ':
-        #             text = person.bio[:-2]
-        #         else:
-        #             text = person.bio
-        #         person.bio = text + '^' + item.css('::text').get()
-        #         continue
-        #     elif item.xpath('name()').get() == 'sub':
-        #         if person.bio[-2:] == ', ':
-        #             text = person.bio[:-2]
-        #         else:
-        #             text = person.bio
-        #         person.bio = text + '_' + item.css('::text').get()
-        #         continue
-        #     if 'Selected Publications' == text:
-        #         break
-        #     href = item.css("::attr(href)").get()
-        #     if href is not None:
-        #         person.urls.append({
-        #             'label': text,
-        #             'url': href
-        #         })
-        #         continue
-        #     if text in person.bio:
-        #         person.bio = person.bio.replace(text, text + '\n')
-        #     else:
-        #         person.bio += text + '\n'
-        # person.bio = None if person.bio == '' else person.bio
-        # # urls = header.css('.page-header-bottom-overlay .link-arrow')
-        # # for url in urls:
-        # #     person.urls.append(
-        # #         {'label': 'Other', 'url': url.css("::attr(href)").get()})
-        # # urls = info.css('.field--name-field-stripes-narrow a')
-        # # for url in urls:
-        # #     person.urls.append(
-        # #         {'label': url.css('::text').get(), 'url': url.css("::attr(href)").get()})
-        # person.save()
+        url = response.request.url
+        university = University.objects.get(id=self.id)
+        person = Researcher.objects.get(
+            urls__contains={"label": "University Page", "url": url},
+            university=university
+        )
+        content = response.css("#vsb_content tbody tr")
+        special = False
+        cInfo = content[0].css('tbody tr')
+        if len(cInfo) > 0:
+            cInfo = cInfo[0].css('p')
+        else:
+            cInfo = content[0].css('p')
+        if cInfo is None:
+            special = True
+            cInfo = content[0].css('tbody tr')[0].css(
+                'td::text').get().split('&nbsp;')
+        contactFlags = ['Phone', 'Fax', 'China', 'Building']
+        person.contactInfo = ''
+        # urls = []
+        for info in cInfo:
+            if not special:
+                text = info.css("::text").get()
+            else:
+                text = info
+            if text is None:
+                continue
+            if person.name.lower() in text.lower():
+                person.role = text.lower().replace(
+                    person.name.lower(), '').strip().title()
+            elif 'Professor' in text:
+                person.role = text.strip()
+            elif any(flag in text for flag in contactFlags):
+                person.contactInfo += text + '\n'
+            elif '@' in text:
+                person.email = 'mailto:' + text
+            elif 'Links' in text:
+                # print(person.name)
+                # urls.append({'label': text})
+                pass
+        i = 0
+        arr = content.css('td')
+        flags = ['Publications', 'Awards']
+        for each in arr:
+            each = each.css("::text").get()
+            # print(each)
+            if each is None:
+                i += 2
+            else:
+                i += 1
+            if each in ['Interests', 'Research Areas']:
+                person.interests = '\n'.join(
+                    content[i].css("::text").extract())
+                if any(flag in person.interests for flag in flags):
+                    person.interests = '\n'.join(
+                        content[i - 1].css("::text").extract())
+                break
+        if len(str(person.interests or '').replace('\n', '').strip()) in [0, 1]:
+            person.interests = None
+        person.save()
 
     def parsePeople(self, response):
         fields = response.css(".container .pull-right div")[1:]
@@ -133,6 +87,8 @@ class UniversityCrawler():
                 role = '<Requires Update>'
                 name = person.css('a::text').get()
                 url = person.css('a::attr(href)').get()
+                if 'javascript:' in url:
+                    continue
                 mainURL = re.search(
                     '^([https\:\/\/]+[A-z.]+)', response.request.url).group(1)
                 university = University.objects.get(id=self.id)
@@ -151,7 +107,14 @@ class UniversityCrawler():
                 except Researcher.DoesNotExist:
                     pass
                 hindex = ''
-
+                try:
+                    url = url.replace(
+                        '..', mainURL + self.urlComplement[self.currentDep])
+                except KeyError:
+                    raise KeyError(
+                        'Define a new key for this department in self.urlComplement property')
+                # if url != 'https://www.phys.tsinghua.edu.cn/phyen/info/1071/1243.htm':
+                #     continue
                 try:
                     Researcher.objects.create(
                         name=name,

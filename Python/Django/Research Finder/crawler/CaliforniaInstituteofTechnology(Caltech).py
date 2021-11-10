@@ -33,8 +33,6 @@ class UniversityCrawler():
         person.interests = '\n'.join(infoBody.css(
             '.person-page__body__research-summary::text').extract()).replace(
             'Research Interests', '')
-        if len(person.interests) == 0:
-            person.interests = None
         bio = infoBody.css('.person-page__body__profile .rich-text *')
         person.bio = ''
         urls = []
@@ -57,7 +55,6 @@ class UniversityCrawler():
                     continue
             if len(txt) > 0:
                 person.bio += txt + '\n'
-        person.bio = None if person.bio == '' else person.bio
         for a in urls:
             person.urls.append({
                 'label': a.css('::text').get(),
@@ -69,6 +66,10 @@ class UniversityCrawler():
                 'label': a.css('::text').get(),
                 'url': a.css('::attr(href)').get(),
             })
+        if len(str(person.bio or '').replace('\n', '').strip()) in [0, 1]:
+            person.bio = None
+        if len(str(person.interests or '').replace('\n', '').strip()) in [0, 1]:
+            person.interests = None
         person.save()
 
     def parsePeople(self, response):

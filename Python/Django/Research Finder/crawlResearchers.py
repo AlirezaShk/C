@@ -47,6 +47,8 @@ class UniSpider(scrapy.Spider):
 
         jsonPath = "urls_errors.json"
         open(jsonPath, 'w').close()
+        i = 0
+        counter = 2
         with open('urls.json') as jsonFile:
             data = json.load(jsonFile)
             uni_index = 0
@@ -54,6 +56,9 @@ class UniSpider(scrapy.Spider):
                 for uni_id, uni_data in dep_data.items():
                     uni = EachUniversity(int(uni_id), uni_data['name'])
                     for field_url in uni_data['urls']:
+                        i += 1
+                        if i != counter:
+                            continue
                         for field in field_url:
                             if field_url[field] in self.start_urls:
                                 pass

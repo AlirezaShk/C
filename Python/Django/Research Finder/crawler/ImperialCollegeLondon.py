@@ -21,120 +21,85 @@ class UniversityCrawler():
             'Astrophysics': self.type6,
             'Imperial Centre For Quantum Engineering, Science And Technology': self.type7,
             'Quantum Optics and Laser Science (QOLS)': self.type6,
-            # 'Centre for Processable Electronics': self.type5,
-            # 'Centre for Processable Electronics': self.type5,
         }
 
     def eachPersonInfo(self, response):
-        # url = response.request.url
-        # university = University.objects.get(id=self.id)
-        # # print(url)
-        # # print({"label": "University Page", "url": url})
-        # person = Researcher.objects.get(
-        #     urls__contains={"label": "University Page", "url": url},
-        #     university=university
-        # )
-        # content = response.css("#content")
-        # person.name = content.css('#page-title::text').get()
-        # contactInfo = content.css("#people-contact-info")
-        # person.contactInfo = ''
-        # for field in contactInfo.css(".field"):
-        #     classList = field.xpath("@class").get()
-        #     # is role?
-        #     if 'field-name-field-people-position' in classList:
-        #         person.role = ', '.join(
-        #             field.css(".field-item::text").extract()
-        #         )
-        #     elif 'field-name-field-people-phone' in classList:
-        #         person.contactInfo += 'Phone: ' + ', '.join(
-        #             field.css(".field-item::text").extract()
-        #         ) + '\n'
-        #     elif 'field-name-field-people-email' in classList:
-        #         person.email += field.css("a::attr(href)").get()
-        #     elif 'field-name-field-people-office-location' in classList:
-        #         person.contactInfo += 'Office Location: ' + ', '.join(
-        #             field.css(".field-item::text").extract()
-        #         ) + '\n'
-        #     elif 'field-name-field-people-website' in classList:
-        #         urls = field.css(".field-item a")
-        #         for url in urls:
-        #             person.urls.append({
-        #                 'label': url.css('::text').get(),
-        #                 'url': url.css('::attr(href)').get(),
-        #             })
-        #     elif 'field-name-field-advisees' in classList:
-        #         relatedPeople = field.css(".field-item .view-content li")
-        #         for relPerson in relatedPeople:
-        #             person.relatedPeople.append({
-        #                 'title': 'Advisee',
-        #                 'name': relPerson.css('a::text').get(),
-        #                 'url': relPerson.css('a::attr(href)').get()
-        #             })
-        #     elif 'field-name-field-people-assistant' in classList:
-        #         relatedPeople = field.css(".field-item .view-content li")
-        #         for relPerson in relatedPeople:
-        #             person.relatedPeople.append({
-        #                 'title': 'Assistant',
-        #                 'name': relPerson.css('a::text').get(),
-        #                 'url': relPerson.css('a::attr(href)').get()
-        #             })
-        #     else:
-        #         print("-------------- NEW FIELD --------------")
-        #         print(classList)
-        #         print("\n")
-        # info = content.css('#people-detail-info')
-        # person.interests = None
-        # person.bio = ''
-        # bio = info.css('.field-name-body .field-item *')
-        # for item in bio:
-        #     text = ', '.join(item.css("::text").extract()).strip()
-        #     if any([
-        #         text == ' , ',
-        #         text == ', ',
-        #         text == ' ',
-        #         text == '\n',
-        #         len(text) == 1,
-        #         len(text) == 0
-        #     ]):
-        #         continue
-        #     if item.xpath('name()').get() == 'sup':
-        #         if person.bio[-2:] == ', ':
-        #             text = person.bio[:-2]
-        #         else:
-        #             text = person.bio
-        #         person.bio = text + '^' + item.css('::text').get()
-        #         continue
-        #     elif item.xpath('name()').get() == 'sub':
-        #         if person.bio[-2:] == ', ':
-        #             text = person.bio[:-2]
-        #         else:
-        #             text = person.bio
-        #         person.bio = text + '_' + item.css('::text').get()
-        #         continue
-        #     if 'Selected Publications' == text:
-        #         break
-        #     href = item.css("::attr(href)").get()
-        #     if href is not None:
-        #         person.urls.append({
-        #             'label': text,
-        #             'url': href
-        #         })
-        #         continue
-        #     if text in person.bio:
-        #         person.bio = person.bio.replace(text, text + '\n')
-        #     else:
-        #         person.bio += text + '\n'
-        # person.bio = None if person.bio == '' else person.bio
-        # urls = header.css('.page-header-bottom-overlay .link-arrow')
-        # for url in urls:
-        #     person.urls.append(
-        #         {'label': 'Other', 'url': url.css("::attr(href)").get()})
-        # urls = info.css('.field--name-field-stripes-narrow a')
-        # for url in urls:
-        #     person.urls.append(
-        #         {'label': url.css('::text').get(), 'url': url.css("::attr(href)").get()})
-        # person.save()
-        pass
+        url = response.request.url
+        university = University.objects.get(id=self.id)
+        person = Researcher.objects.get(
+            urls__contains={"label": "University Page", "url": url},
+            university=university
+        )
+        contactInfo = response.css('#AcademicDetails .elementWrapper')
+        person.email = response.css("#emailuser a::attr(href)").get()
+        person.contactInfo = ''
+        for cInfo in contactInfo:
+            title = cInfo.css('.h3wrapper h3::text').get()
+            if title == 'Contact':
+                info = cInfo.css('p span')
+                for each in info:
+                    text = ', '.join(each.css("::text").extract())
+                    if '+44' in text:
+                        person.contactInfo += text.replace(
+                            '+44', 'Telephone: +44') + '\n'
+                    elif 'Website' in text:
+                        person.urls.append({
+                            'label': each.css("a::text").get(),
+                            'url': each.css("a::attr(href)").get()
+                        })
+                    elif 'mail' not in each.css("a::attr(href)").get():
+                        print('-------- New Field --------')
+                        print(text)
+            elif title == 'Assistant':
+                relPerson = {'title': 'Assistant', 'name': None}
+                info = cInfo.css('p span')
+                for each in info:
+                    text = ', '.join(each.css("::text").extract())
+                    if '+44' in text:
+                        relPerson['phone'] = text
+                    elif '@' in text:
+                        relPerson['email'] = 'mailto' + text
+                    elif relPerson['name'] is None:
+                        relPerson['name'] = text
+                    else:
+                        print('-------- New RelatedPerson Field --------')
+                        print(each)
+                person.relatedPeople = [relPerson]
+            elif title == 'Location':
+                if person.contactInfo is None:
+                    person.contactInfo = ''
+                info = cInfo.css('p span')
+                for each in info:
+                    text = ', '.join(each.css("::text").extract())
+                    person.contactInfo = text + '\n'
+        person.role = ', '.join(
+            response.css('.ac_info header em *::text').extract()
+        )
+        if "Professor" not in person.role:
+            person.role = "Professor, " + person.role
+        content = response.css("#customContent p")
+        person.interests = ''
+        person.bio = ''
+        for each in content:
+            text = '\n'.join(each.css("::text").extract())
+            urls = each.css("a")
+            for url in urls:
+                person.urls.append({
+                    'label': str(url.css('::text').get() or 'Other'),
+                    'url': url.css('::attr(href)').get(),
+                })
+                if url.css('::text').get() is not None:
+                    text = text.replace('\n' + url.css('::text').get() + '\n',
+                                        url.css('::text').get())
+            if "Interests" in ','.join(response.css("#customContent *::text").extract()):
+                person.interests += text + '\n'
+            else:
+                person.bio += text + '\n'
+        if len(str(person.bio or '').replace('\n', '').strip()) in [0, 1]:
+            person.bio = None
+        if len(str(person.interests or '').replace('\n', '').strip()) in [0, 1]:
+            person.interests = None
+        person.save()
 
     def parsePeople(self, response):
         # people = response.css(
@@ -151,61 +116,6 @@ class UniversityCrawler():
         elif field.title() == "John Adams Institute At Imperial College":
             field = "Imperial Centre For Quantum Engineering, Science And Technology"
         return self.parser[field](field, university, response)
-        # try:
-        #     return self.parser[field](response)
-        # except:
-        #     print(field)
-
-        # urls = []
-        # blacklist = ['Emeritus', 'emeritus']
-        # for person in people:
-        #     # role = ', '.join(person.css(
-        #     #     '.people-grid-position li::text').extract())
-        #     # if any(bl in role for bl in blacklist):
-        #     #     continue
-        #     role = '<Requires Update>'
-        #     name = person.css('::text').get().split(', ')
-        #     try:
-        #         name = name[1] + ' ' + name[0]
-        #     except:
-        #         print(name)
-        #         continue
-        #     mainURL = re.search(
-        #         '^([https\:\/\/]+[A-z.]+)', response.request.url).group(1)
-        #     url = person.css('::attr(href)').get()
-        #     if "person=" in url:
-        #         urlName = url.split('person=')[1]
-        #         url = mainURL + '/people/' + urlName
-        #     university = University.objects.get(id=self.id)
-        #     if university.logo is None:
-        #         university.logo = "https://www.imperial.ac.uk/assets/website/images/favicon/favicon-144.png"
-        #         university.color = 'ICL-blue'
-        #         university.save()
-        #     try:
-        #         person = Researcher.objects.get(
-        #             name=name,
-        #             university=university
-        #         )
-        #         person.fields[self.currentDep].append(field)
-        #         person.save()
-        #         continue
-        #     except Researcher.DoesNotExist:
-        #         pass
-        #     hindex = ''
-
-        #     Researcher.objects.create(
-        #         name=name,
-        #         email="<Requires Update>",
-        #         urls=[{"label": "University Page", "url": mainURL + person.css(
-        #             '.people-grid-name-linked a::attr(href)').get()}],
-        #         university=university,
-        #         hindex=hindex,
-        #         fields={self.currentDep: [field]},
-        #         role=role
-        #     )
-        #     urls.append(mainURL + person.css(
-        #                 '.people-grid-name-linked a::attr(href)').get())
-        # return response.follow_all(urls, self.eachPersonInfo)
 
     def type1(self, field, university, response):
         people = response.css(
@@ -277,7 +187,8 @@ class UniversityCrawler():
             except Researcher.DoesNotExist:
                 pass
             hindex = ''
-
+            if name == 'Dr Gunnar Pruessner':
+                url = 'https://www.imperial.ac.uk/people/g.pruessner'
             Researcher.objects.create(
                 name=name,
                 email="<Requires Update>",
