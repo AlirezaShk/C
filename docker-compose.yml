@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  ros:
+    build:
+      context: .
+      dockerfile: cnf/Dockerfile
+    image: ros_app
+    ports:
+      - 3006:3006
+    tty: true
+    volumes:
+      - type: bind
+        source: .
+        target: /home/app
